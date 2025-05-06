@@ -17,7 +17,7 @@ module.exports = {
           darker: '#370059',
         },
         blueBrand: {
-          lighter: '#b2bbc6',
+          lighter: '#B2BBC6',
           lightHover: '#a3adbb',
           lightActive: '#909dad',
           normal: '#546881',

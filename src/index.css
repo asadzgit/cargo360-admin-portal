@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-shadow {
+    box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.05), 4px 0px 4px 0px rgba(0, 0, 0, 0.05), -4px 0px 4px 0px rgba(0, 0, 0, 0.05), 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
+}
+
+.form-radius {
+    border-radius: 12px;
+}
+
+.form-padding {
+    padding: 40px;
+}
+
+.border-200 {
+    border-radius: 200px;
+}
+
+.border-6 {
+    border-radius: 6px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.pl-102 {
+    padding-left: 102px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.mt-70 {
+    margin-top: 70px;
+}
+
+.pr-388 {
+    padding-right: 388px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+.search-input {
+    background: url('./assets/images/search-icon.svg') no-repeat 10px center;
+    padding-left: 40px;
+}

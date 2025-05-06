@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+
+import 'react-toastify/dist/ReactToastify.css'
+import Layout from './components/Layout.jsx'
+import ChangePassword from './pages/ChangePassword.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
+import Products from './pages/Products.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
+import SalesApprovalsPage from './pages/SalesApprovalsPage.jsx'
+import Signin from './pages/Signin.jsx'
+import Signup from './pages/Signup.jsx'
+import UsersPage from './pages/UsersPage.jsx'
+import VerifyCode from './pages/VerifyCode.jsx'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <Router>
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/verify-code" element={<VerifyCode />} />
+
+          <Route element={<Layout />}>
+            <Route path="/products" element={<Products />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/approvals" element={<SalesApprovalsPage />} />
+            <Route
+              path="/approvals/:username"
+              element={<SalesApprovalsPage />}
+            />
+            <Route path="/users" element={<UsersPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </>
+  )
 }
 
-export default App;
+export default App
