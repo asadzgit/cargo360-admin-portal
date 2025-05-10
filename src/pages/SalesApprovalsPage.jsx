@@ -115,8 +115,8 @@ const SalesApprovalsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 p-6">
-        <div className="flex justify-between">
+      <main className="flex-1 px-[94px] py-[30px]">
+        <div className="flex justify-between px-[12px]">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             {username && (
               <button
@@ -129,14 +129,16 @@ const SalesApprovalsPage = () => {
             <span className="text-purple-600">
               <img src={payoutsIcon} alt="icon" />
             </span>
-            {username ? `Payout Requests (${username})` : 'Payout Requests'}
+            <span className="modal-heading">
+              {username ? `Payout Requests (${username})` : 'Payout Requests'}
+            </span>
           </h2>
 
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-[20px] mb-4">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="border rounded px-3 py-2 focus:outline-none"
+              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none"
             >
               <option>Pending</option>
               <option>Approved</option>
@@ -145,7 +147,7 @@ const SalesApprovalsPage = () => {
             <select
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="border rounded px-3 py-2 focus:outline-none"
+              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none"
             >
               <option>Recent Requests</option>
               <option>Last 15 Days</option>
@@ -153,7 +155,7 @@ const SalesApprovalsPage = () => {
             </select>
             {!username && (
               <button
-                className="text-blueBrand-normal px-4 py-2"
+                className="text-blueBrand-normal filter-button"
                 onClick={() => {
                   setStatusFilter('Pending')
                   setDateFilter('Recent Requests')
@@ -168,8 +170,8 @@ const SalesApprovalsPage = () => {
 
         <div className="overflow-x-auto bg-white rounded shadow">
           <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100 text-blueBrand-normal text-xs font-semibold">
-              <tr>
+            <thead className="bg-[#F6F5F6] text-blueBrand-normal text-xs font-semibold">
+              <tr className="filter-button leading-[18px]">
                 <th className="px-4 py-3">Order ID</th>
                 <th className="px-4 py-3">User Name</th>
                 <th className="px-4 py-3">Product Name</th>
@@ -186,19 +188,23 @@ const SalesApprovalsPage = () => {
                   key={req.orderId}
                   className={`border-t cursor-pointer ${
                     req.status === 'Approved'
-                      ? 'bg-green-100'
+                      ? 'bg-[#ABEFC6]'
                       : req.status === 'Rejected'
-                        ? 'bg-red-100'
+                        ? 'bg-[#FDECEC]'
                         : 'hover:bg-gray-50'
                   }`}
                   onClick={() => !username && handleRowClick(req.userName)}
                 >
-                  <td style={{ padding: '16px 24px 16px 24px' }}>
+                  <td className="px-[24px] py-[16px] form-subheading">
                     {req.orderId}
                   </td>
-                  <td className="px-4 py-2">{req.userName}</td>
-                  <td className="px-4 py-2">{req.productName}</td>
-                  <td className="px-4 py-2 text-green-600 text-[12px]">
+                  <td className="px-[24px] py-[16px] form-subheading">
+                    {req.userName}
+                  </td>
+                  <td className="px-[24px] py-[16px] form-subheading">
+                    {req.productName}
+                  </td>
+                  <td className="px-[24px] py-[16px] form-subheading text-green-600 text-[12px]">
                     <button
                       style={{
                         borderRadius: '4px',
@@ -207,10 +213,10 @@ const SalesApprovalsPage = () => {
                         padding: '2px 8px',
                       }}
                     >
-                      ${req.payout}
+                      ${` ${req.payout}`}
                     </button>
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-[24px] py-[16px] form-subheading">
                     <a
                       href={req.receiptUrl}
                       className="text-purple-600 underline"
@@ -219,7 +225,7 @@ const SalesApprovalsPage = () => {
                     </a>
                   </td>
                   {username && (
-                    <td className="px-4 py-2">
+                    <td className="px-[24px] py-[16px]">
                       <button
                         className="text-purple-600 underline text-sm"
                         onClick={() =>
@@ -237,8 +243,15 @@ const SalesApprovalsPage = () => {
                       </button>
                     </td>
                   )}
-                  <td className="px-4 py-2">{req.dateTime}</td>
-                  <td className="px-4 py-2">
+                  <td
+                    className="px-[24px] py-[16px] text-blueBrand-normal form-subheading"
+                    style={{ lineHeight: '20px' }}
+                  >
+                    {req.dateTime.split(/(?<=\d{4})\s/).map((part, i) => (
+                      <div key={i}>{part}</div>
+                    ))}
+                  </td>
+                  <td className="px-[24px] py-[16px]">
                     {req.status === 'Approved' && (
                       <span className="text-green-700 font-semibold">
                         Approved
@@ -256,7 +269,7 @@ const SalesApprovalsPage = () => {
                             e.stopPropagation()
                             handleDecline(req.orderId)
                           }}
-                          className="text-red-600 hover:underline text-sm"
+                          className="action-button text-[#DC3434] hover:underline"
                         >
                           Decline
                         </button>
@@ -265,7 +278,7 @@ const SalesApprovalsPage = () => {
                             e.stopPropagation()
                             handleAccept(req.orderId)
                           }}
-                          className="text-green-600 hover:underline text-sm"
+                          className="action-button text-[#17B26A] hover:underline"
                         >
                           Accept
                         </button>

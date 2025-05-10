@@ -99,9 +99,9 @@ const UsersPage = () => {
     return matchesSearch && matchesAccount
   })
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen px-[94px] py-[30px]">
       <div className="flex justify-between mb-[16px]">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center ml-[12px] gap-[12px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -122,22 +122,22 @@ const UsersPage = () => {
               fill="#9D00FF"
             />
           </svg>
-          <h1 className="text-2xl font-bold">Users</h1>
+          <h1 className="modal-heading">Users</h1>
         </div>
 
-        <div className="flex justify-between items-center mb-4 gap-[18px]">
+        <div className="flex justify-between items-center gap-[20px]">
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input border rounded px-4 py-2 pr-10 focus:outline-none"
+            className="search-input filter-button-border px-[14px] py-[10px] focus:outline-none h-[40px]"
           />
           <div className="flex items-center gap-4">
             <select
               value={selectedAccount}
               onChange={(e) => setSelectedAccount(e.target.value)}
-              className="border rounded px-3 py-2 focus:outline-none text-blueBrand-normal"
+              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none text-blueBrand-normal"
             >
               <option value="All Users">All Users</option>
               <option value="Admins">Admins</option>
@@ -145,7 +145,11 @@ const UsersPage = () => {
             </select>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+              className="filter-button bg-purpleBrand-dark px-[14px] py-[10px] rounded-[6px] hover:bg-purpleBrand-darkHover"
+              style={{
+                boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
+                color: '#fff',
+              }}
             >
               Add New
             </button>
@@ -156,8 +160,8 @@ const UsersPage = () => {
       {/* Users Table */}
       <div className="bg-white rounded shadow overflow-x-auto">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-100 text-blueBrand-normal text-xs">
-            <tr>
+          <thead className="bg-[#F6F5F6] text-blueBrand-normal text-xs">
+            <tr className="filter-button leading-[18px]">
               <th className="px-4 py-3">Full Name</th>
               <th className="px-4 py-3">Email Address</th>
               <th className="px-4 py-3">Account</th>
@@ -171,7 +175,11 @@ const UsersPage = () => {
                 <td className="px-4 py-3 flex items-center gap-2 relative">
                   {idx % 2 === 0 ? (
                     <>
-                      <img src={userAvatar} width="32"></img>
+                      <img
+                        src={userAvatar}
+                        className="rounded-full"
+                        style={{ width: '32px', height: '32px' }}
+                      ></img>
                       <svg
                         className="absolute left-[38px] bottom-[12px]"
                         xmlns="http://www.w3.org/2000/svg"
@@ -190,33 +198,43 @@ const UsersPage = () => {
                       </svg>
                     </>
                   ) : (
-                    <img src={userAvatarOther} width="32"></img>
+                    <img
+                      src={userAvatarOther}
+                      className="rounded-full"
+                      style={{ width: '32px', height: '32px' }}
+                    ></img>
                   )}
-                  {user.name}
+                  <span className="form-subheading text-blueBrand-dark">
+                    {user.name}
+                  </span>
                 </td>
-                <td className="px-4 py-3">{user.email}</td>
+                <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
+                  {user.email}
+                </td>
                 <td
-                  className={`px-4 py-3 ${user.account === 'Admin' ? 'text-purple-600' : ''}`}
+                  className={`px-[24px] py-[16px] form-subheading text-blueBrand-dark ${user.account === 'Admin' ? 'text-purpleBrand-normal' : ''}`}
                 >
                   {user.account}
                 </td>
-                <td className="px-4 py-3">{user.joined}</td>
-                <td className="px-4 py-3 relative">
+                <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
+                  {user.joined}
+                </td>
+                <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark relative">
                   <button
                     onClick={() => toggleActionMenu(idx)}
                     className="p-2 hover:bg-gray-100 rounded"
                   >
-                    <FiMoreVertical size={16} />
+                    <FiMoreVertical size={16} stroke="#B2BBC6" />
                   </button>
                   {actionMenuOpen === idx && (
                     <div className="absolute right-0 mt-2 w-32 bg-white shadow rounded border z-10">
-                      <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                      <button className="block w-full text-left px-4 py-2 text-blueBrand-dark font-medium hover:bg-gray-100">
                         Make Agent
                       </button>
-                      <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                      <button className="block w-full text-left px-4 py-2 text-blueBrand-dark font-medium hover:bg-gray-100">
                         Delete
                       </button>
-                      <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                      <button className="block w-full text-left px-4 py-2 text-blueBrand-dark font-medium hover:bg-gray-100">
                         Block
                       </button>
                     </div>
@@ -249,17 +267,19 @@ const UsersPage = () => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl w-96 p-6 relative">
+          <div className="bg-white w-[540px] h-[715px] py-[30px] px-[40px] relative rounded-[12px]">
             <button
               onClick={() => setShowModal(false)}
               className="absolute left-4 top-4 text-gray-500 hover:text-gray-700"
             >
               &larr;
             </button>
-            <h2 className="text-xl font-semibold text-center mb-4">Add User</h2>
+            <h2 className="text-bluBrand-dark form-heading text-center">
+              Add User
+            </h2>
 
             {/* Image upload */}
-            <label className="block border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer text-center">
+            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 w-[207px] h-[123px] mx-auto my-[30px] rounded-[6px] p-[15px] cursor-pointer text-center">
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -268,8 +288,10 @@ const UsersPage = () => {
                 />
               ) : (
                 <>
-                  <FiUpload size={24} className="mx-auto text-gray-500" />
-                  <span className="text-sm text-gray-500">Upload Image</span>
+                  <FiUpload size={24} className="mx-auto text-[#B2BBC6]" />
+                  <span className="mt-[10px] text-blueBrand-dark form-subheading">
+                    Upload Image
+                  </span>
                 </>
               )}
               <input
@@ -281,18 +303,23 @@ const UsersPage = () => {
             </label>
 
             {/* Role */}
-            <div className="flex gap-4 my-4">
-              <label className="flex items-center gap-2">
+            <label className="text-blueBrand-lighter form-label">Role</label>
+            <div className="flex gap-4 mt-[5px] mb-[20px]">
+              <label className="flex items-center role-input gap-[8px] p-[8px] w-[180px]">
                 <input
                   type="checkbox"
+                  className="input-border w-[22px] h-[22px]"
+                  style={{ borderColor: '#E8E9EA' }}
                   checked={formData.role === 'Admin'}
                   onChange={() => handleRoleChange('Admin')}
                 />
                 Admin
               </label>
-              <label className="flex items-center gap-2">
+              <label className="flex items-center role-input gap-[8px] p-[8px] w-[180px]">
                 <input
                   type="checkbox"
+                  className="input-border w-[22px] h-[22px]"
+                  style={{ borderColor: '#E8E9EA' }}
                   checked={formData.role === 'Agent'}
                   onChange={() => handleRoleChange('Agent')}
                 />
@@ -300,55 +327,63 @@ const UsersPage = () => {
               </label>
             </div>
 
-            {/* Name */}
+            <label className="text-blueBrand-lighter form-label">Name</label>
             <input
               name="name"
               value={formData.name}
               onChange={handleFormChange}
-              placeholder="Name"
-              className="border rounded w-full px-3 py-2 mb-3 focus:outline-none"
+              placeholder="Enter your name"
+              className="border rounded w-full px-3 py-2 mb-[20px] focus:outline-none  mt-[5px]"
             />
-            {/* Email */}
+
+            <label className="text-blueBrand-lighter form-label">
+              E-mail or phone number
+            </label>
             <input
               name="email"
               value={formData.email}
               onChange={handleFormChange}
-              placeholder="E-mail or phone number"
-              className="border rounded w-full px-3 py-2 mb-3 focus:outline-none"
+              placeholder="Enter your email"
+              className="border rounded w-full px-3 py-2 focus:outline-none mt-[5px]"
             />
 
-            {/* Passwords */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-[20px] my-[20px]">
               <div className="relative flex-1">
+                <label className="text-blueBrand-lighter form-label">
+                  Password
+                </label>
                 <input
                   name="password"
                   value={formData.password}
                   onChange={handleFormChange}
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
+                  placeholder="Enter your password"
                   className="border rounded w-full px-3 py-2 pr-10 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-2 text-gray-500"
+                  className="absolute right-2 top-[38px] text-gray-500"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
               <div className="relative flex-1">
+                <label className="text-blueBrand-lighter form-label">
+                  Confimr Password
+                </label>
                 <input
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleFormChange}
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Confirm Password"
+                  placeholder="Enter your password"
                   className="border rounded w-full px-3 py-2 pr-10 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-2 text-gray-500"
+                  className="absolute right-2 top-[38px] text-gray-500"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
@@ -357,7 +392,7 @@ const UsersPage = () => {
 
             <button
               onClick={handleAddUser}
-              className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
+              className="w-full bg-purpleBrand-dark text-white py-[14px] px-[49px] rounded-[6px] hover:bg-purpleBrand-darkHover product-name leading-[24px]"
             >
               Add
             </button>

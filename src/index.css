@@ -11,6 +11,108 @@ body {
     box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.05), 4px 0px 4px 0px rgba(0, 0, 0, 0.05), -4px 0px 4px 0px rgba(0, 0, 0, 0.05), 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
 }
 
+.form-heading {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 36px;
+}
+
+.form-subheading {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.submit-btn {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    border-radius: 6px;
+    background: var(--Foundation-Purple-Dark, #7600BF);
+}
+
+.input-border {
+    border-radius: 6px;
+    border: 1px solid #E8E9EA;
+}
+
+input::placeholder {
+    color: #B2BBC6;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.modal-heading {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.product-name {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+.product-header {
+    color: #B2BBC6;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+.product-cell {
+    color: #1D242D;
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.filter-button {
+    color: #546881;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.action-button {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.filter-button-border {
+    border-radius: 6px;
+    border: 1px solid #E6E4E7;
+    background: #FFF;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.role-input {
+    color: #1D242D;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
 .form-radius {
     border-radius: 12px;
 }
@@ -41,6 +143,10 @@ body {
 
 .mt-70 {
     margin-top: 70px;
+}
+
+.mt-15 {
+    margin-top: 15px;
 }
 
 .pr-388 {

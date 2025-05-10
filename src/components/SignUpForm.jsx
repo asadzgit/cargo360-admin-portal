@@ -77,23 +77,25 @@ const SignUpForm = () => {
   return (
     <div className="min-h-screen bg-whiteBrand-light flex items-center justify-center p-4">
       <div className="bg-white shadow-lg p-8 w-full max-w-[540px] form-shadow form-radius form-padding w-[540px]">
-        <h2 className="text-2xl font-bold text-blueBrand-dark text-center">
+        <h2 className="text-blueBrand-dark text-center form-heading">
           Sign Up
         </h2>
-        <p className="text-blueBrand-normal text-center mb-[30px]">
+        <p className="text-blueBrand-lighter text-center mb-[30px] form-subheading">
           Enter details to create your account
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-[20px]" noValidate>
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium mb-1">Your name</label>
+            <label className="block mb-1 text-blueBrand-dark form-label">
+              Your name
+            </label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+              className={`w-full input-border p-[15px] focus:outline-none ${
                 errors.name
                   ? 'border-red-500'
                   : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -107,7 +109,7 @@ const SignUpForm = () => {
 
           {/* Email or Phone */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block mb-1 text-blueBrand-dark form-label">
               E-mail or phone number
             </label>
             <input
@@ -115,7 +117,7 @@ const SignUpForm = () => {
               name="emailOrPhone"
               value={formData.emailOrPhone}
               onChange={handleChange}
-              className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+              className={`w-full input-border p-[15px] focus:outline-none ${
                 errors.emailOrPhone
                   ? 'border-red-500'
                   : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -130,14 +132,16 @@ const SignUpForm = () => {
           {/* Password and Confirm Password */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
             <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
+              <label className="block mb-1 text-blueBrand-dark form-label">
+                Password
+              </label>
               <div className={`relative w-full`}>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+                  className={`w-full input-border p-[15px] focus:outline-none ${
                     errors.password
                       ? 'border-red-500'
                       : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -162,7 +166,7 @@ const SignUpForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block mb-1 text-blueBrand-dark form-label">
                 Confirm Password
               </label>
               <div className={`relative w-full`}>
@@ -171,7 +175,7 @@ const SignUpForm = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+                  className={`w-full input-border p-[15px] focus:outline-none ${
                     errors.confirmPassword
                       ? 'border-red-500'
                       : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -202,7 +206,7 @@ const SignUpForm = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 bg-purpleBrand-normal hover:bg-purpleBrand-normalHover text-white font-semibold rounded-md mt-4 transition-colors disabled:opacity-50"
+            className="submit-btn w-full h-12 bg-purpleBrand-dark hover:bg-purpleBrand-normalHover text-white rounded-md mt-4 transition-colors disabled:opacity-50"
           >
             {isSubmitting ? 'Signing up...' : 'Sign up'}
           </button>
@@ -211,27 +215,31 @@ const SignUpForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
             <button
               type="button"
-              className="w-full border border-blueBrand-lighter rounded-md flex items-center justify-center gap-2 py-2 hover:bg-gray-50"
+              className="w-full input-border p-[15px] flex items-center justify-center gap-2 hover:bg-gray-50"
             >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
                 alt="Google"
                 className="h-5 w-5"
               />
-              <span>Sign up with Google</span>
+              <span className="text-blueBrand-dark form-subheading">
+                Sign up with Google
+              </span>
             </button>
             <button
               type="button"
-              className="w-full border border-blueBrand-lighter rounded-md flex items-center justify-center gap-2 py-2 hover:bg-gray-50"
+              className="w-full input-border p-[15px] flex items-center justify-center gap-2 hover:bg-gray-50"
             >
               <img src={appleIcon} alt="Apple" className="h-5 w-5" />
-              <span>Sign up with Apple</span>
+              <span className="text-blueBrand-dark form-subheading">
+                Sign up with Apple
+              </span>
             </button>
           </div>
         </form>
 
         {/* Sign In Link */}
-        <p className="text-center text-sm mt-6">
+        <p className="text-center text-blueBrand-dark fomr-subheading mt-[20px]">
           Already have an account?{' '}
           <a href="/signin" className="text-purpleBrand-normal hover:underline">
             Sign in

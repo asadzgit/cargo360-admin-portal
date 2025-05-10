@@ -61,17 +61,17 @@ const ChangePassword = () => {
   return (
     <div className="min-h-screen bg-whiteBrand-light flex items-center justify-center p-4">
       <div className="bg-white shadow-lg p-8 w-full max-w-[540px] form-shadow form-radius form-padding w-[540px]">
-        <h2 className="text-2xl font-bold text-blueBrand-dark text-center">
+        <h2 className="text-blueBrand-dark text-center form-heading">
           New Password
         </h2>
-        <p className="text-blueBrand-normal text-center mb-[30px]">
+        <p className="text-blueBrand-lighter text-center mb-[30px] form-subheading">
           Set Complex passwords to protect
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-[20px]" noValidate>
-          <div className="grid grid-cols-1 gap-[20px]">
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="grid grid-cols-1 gap-[25px]">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-blueBrand-dark form-label mb-1">
                 New Password
               </label>
               <div className={`relative w-full`}>
@@ -80,7 +80,7 @@ const ChangePassword = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+                  className={`w-full border input-border p-[15px] focus:outline-none ${
                     errors.password
                       ? 'border-red-500'
                       : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -105,7 +105,7 @@ const ChangePassword = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-blueBrand-dark form-label mb-1">
                 Confirm Password
               </label>
               <div className={`relative w-full`}>
@@ -114,7 +114,7 @@ const ChangePassword = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`w-full border rounded-md px-4 py-2 focus:outline-none ${
+                  className={`w-full border input-border p-[15px] focus:outline-none ${
                     errors.confirmPassword
                       ? 'border-red-500'
                       : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
@@ -144,7 +144,7 @@ const ChangePassword = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 bg-purpleBrand-normal hover:bg-purpleBrand-normalHover text-white font-semibold rounded-md mt-4 transition-colors disabled:opacity-50"
+            className="submit-btn w-full h-12 bg-purpleBrand-dark hover:bg-purpleBrand-normalHover text-white font-semibold rounded-md transition-colors disabled:opacity-50 mt-[25px]"
           >
             Set new password
           </button>

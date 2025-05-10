@@ -58,8 +58,20 @@ const AddProductModal = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg w-full max-w-xl p-6 relative">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      style={{ marginLeft: 0 }}
+    >
+      <div
+        className="bg-white rounded-lg w-full relative py-[30px]"
+        style={{
+          marginLeft: 0,
+          width: '903px',
+          height: '694px',
+          flexShrink: 0,
+          borderRadius: '12px',
+        }}
+      >
         <button
           onClick={() => (step === 1 ? onClose() : setStep(1))}
           className="absolute top-4 left-4 text-gray-600 hover:text-black"
@@ -67,7 +79,9 @@ const AddProductModal = ({ isOpen, onClose }) => {
           ←
         </button>
 
-        <h2 className="text-2xl font-semibold text-center mb-2">Add Product</h2>
+        <h2 className="modal-heading text-blueBrand-dark text-center mb-2">
+          Add Product
+        </h2>
 
         <div className="flex justify-center mb-6 text-sm font-medium text-gray-500">
           {step === 1 ? (
@@ -88,9 +102,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
               />
             </svg>
           )}
-          <span
-            className={`${step === 1 ? 'text-purple-600' : ''} pb-1 ml-2 mr-4`}
-          >
+          <span className={`text-blueBrand-dark pb-1 ml-2 mr-4`}>
             Product Information
           </span>
           <span
@@ -98,14 +110,16 @@ const AddProductModal = ({ isOpen, onClose }) => {
           >
             —
           </span>
-          <span className={`${step === 2 ? 'text-purple-600' : ''} ml-2`}>
+          <span
+            className={`${step === 2 ? 'text-blueBrand-dark' : 'text-blueBrand-lighter'} ml-2`}
+          >
             Review
           </span>
         </div>
 
         {step === 1 && (
-          <>
-            <label className="flex w-60 m-auto items-center justify-center border-2 border-dashed border-gray-300 rounded-md h-32 mb-6 cursor-pointer">
+          <div className="mx-[256px]">
+            <label className="flex w-[207px] m-auto items-center justify-center border-2 border-dashed border-gray-300 rounded-md h-32 mb-[30px] cursor-pointer">
               {formData.imagePreview ? (
                 <img
                   src={formData.imagePreview}
@@ -113,7 +127,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
                   className="h-full object-contain"
                 />
               ) : (
-                <div className="text-gray-400 text-center">
+                <div className="form-subheading text-center">
                   <div className="text-3xl mb-2">
                     <svg
                       className="m-auto"
@@ -146,7 +160,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
 
             <form className="space-y-4" onSubmit={handleContinue}>
               <div>
-                <label className="block text-sm font-medium mb-1 text-blueBrand-lighter">
+                <label className="block form-label mb-[5px] text-blueBrand-lighter">
                   Name
                 </label>
                 <input
@@ -154,14 +168,14 @@ const AddProductModal = ({ isOpen, onClose }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full border rounded-md p-2 text-sm"
+                  className="w-full input-border p-[15px] text-sm"
                   placeholder="Enter product name"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-blueBrand-lighter">
+                <label className="block form-label mb-[5px] text-blueBrand-lighter">
                   Description
                 </label>
                 <textarea
@@ -169,7 +183,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full border rounded-md p-2 text-sm"
+                  className="w-full input-border p-[15px] text-sm"
                   placeholder="Enter description"
                   required
                 ></textarea>
@@ -177,10 +191,10 @@ const AddProductModal = ({ isOpen, onClose }) => {
 
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-1 text-blueBrand-lighter">
+                  <label className="block form-label mb-[5px] text-blueBrand-lighter">
                     Retail price
                   </label>
-                  <div className="flex items-center border rounded-md p-2 text-sm">
+                  <div className="flex items-center input-border p-[15px] text-sm">
                     <input
                       type="number"
                       name="price"
@@ -195,10 +209,10 @@ const AddProductModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-1 text-blueBrand-lighter">
+                  <label className="block form-label mb-[5px] text-blueBrand-lighter">
                     Commission
                   </label>
-                  <div className="flex items-center border rounded-md p-2 text-sm">
+                  <div className="flex items-center input-border p-[15px] text-sm">
                     <input
                       type="number"
                       name="commission"
@@ -213,11 +227,11 @@ const AddProductModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 mt-6">
+              <div className="flex justify-end mt-6 gap-[30px]">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-purple-600 hover:underline text-sm"
+                  className="text-purple-600 text-sm py-[10px] px-[14px]"
                 >
                   Cancel
                 </button>
@@ -229,23 +243,30 @@ const AddProductModal = ({ isOpen, onClose }) => {
                 </button>
               </div>
             </form>
-          </>
+          </div>
         )}
 
         {step === 2 && (
-          <>
-            <div className="flex flex-col items-center mb-6">
-              {formData.imagePreview && (
-                <img
-                  src={formData.imagePreview}
-                  alt="Product"
-                  className="h-32 mb-2 object-contain"
-                />
-              )}
-              <h3 className="text-lg font-medium">{formData.name}</h3>
+          <div className="mx-[256px]">
+            <div className="flex flex-col items-center mb-[30px]">
+              <div
+                className="p-[19px] bg-[#F6F8F9] w-[123px] h-[123px]"
+                style={{ borderRadius: '12px' }}
+              >
+                {formData.imagePreview && (
+                  <img
+                    src={formData.imagePreview}
+                    alt="Product"
+                    className="h-[88px] w-[88px] mb-2 object-contain"
+                  />
+                )}
+              </div>
+              <h3 className="text-lg font-medium mt-[15px] product-name">
+                {formData.name}
+              </h3>
             </div>
 
-            <hr className="mb-4" />
+            <hr className="mb-[30px]" />
 
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-sm font-bold">Product Details</h4>
@@ -273,31 +294,35 @@ const AddProductModal = ({ isOpen, onClose }) => {
               </button>
             </div>
 
-            <div className="text-sm space-y-2 mb-6">
+            <div className="text-sm space-y-[15px] mb-[30px]">
               <div className="flex justify-between">
-                <span className="text-gray-400">Product Name</span>
-                <span>{formData.name}</span>
+                <span className="product-header">Product Name</span>
+                <span className="product-cell">{formData.name}</span>
               </div>
               <div className="flex justify-between gap-2">
-                <span className="text-gray-400 block">Product Description</span>
-                <p className="text-right">{formData.description}</p>
+                <span className="product-header block">
+                  Product Description
+                </span>
+                <p className="text-right product-cell">
+                  {formData.description}
+                </p>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Retail Price</span>
-                <span>${formData.price}</span>
+                <span className="product-header">Retail Price</span>
+                <span className="product-cell">${formData.price}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Commission</span>
-                <span>${formData.commission}</span>
+                <span className="product-header">Commission</span>
+                <span className="product-cell">${formData.commission}</span>
               </div>
             </div>
 
-            <hr className="mb-4" />
+            <hr className="mb-[15px]" />
 
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-[30px]">
               <button
                 onClick={handleDiscard}
-                className="text-purple-600 hover:underline text-sm"
+                className="text-purple-600 text-sm py-[10px] px-[14px]"
               >
                 Discard
               </button>
@@ -308,7 +333,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
                 Save Product
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
