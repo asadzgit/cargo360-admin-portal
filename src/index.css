@@ -7,6 +7,139 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+.main-navbar {
+    border-bottom: 1px solid #B2BBC6;
+}
+
+.welcome-text {
+    color: #1D242D;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 542;
+    line-height: normal;
+    letter-spacing: -0.109px;
+}
+
+.welcome-subheading {
+    color: #B2BBC6;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.048px;
+}
+
+.time-range-button {
+    border-radius: 6px;
+    border: 1px solid;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 542;
+    line-height: normal;
+    letter-spacing: -0.048px;
+}
+
+.metric-item {
+    display: flex;
+    height: 188px;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 1px solid #F6F5F6;
+    background: #FFF;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.metric-heading {
+    color: #1D242D;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.metric-value {
+    color: #1D242D;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 44px;
+    letter-spacing: -0.72px;
+}
+
+.metric-analytics {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.metric-item-icon {
+    border: 1px solid #E6E4E7;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.chart-title {
+    color:#1D242D;
+    font-size: 15.968px;
+    font-style: normal;
+    font-weight: 568;
+    line-height: normal;
+}
+
+.chart-date-range {
+    color: #546881;
+    font-size: 13.686px;
+    font-style: normal;
+    font-weight: 568;
+    line-height: normal;
+}
+
+.chart {
+    border-radius: 6px;
+    border: 1.141px solid #F6F5F6;
+}
+
+.best-products {
+    padding: 18.249px 18.249px 0px 18.249px;
+    border-radius: 6px;
+    border: 1px solid #F6F5F6;
+    background: #FFF;
+}
+
+.product-date-range {
+    border-radius: 2px;
+    border: 1px solid #F6F5F6;
+    padding: 8px;
+    color: #B2BBC6;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.table-body {
+    color: #1D242D;
+    font-size: 13.686px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.047px;
+}
+
+.table-image-container {
+    border-radius: 4px;
+    padding: 2px 2.1px 1px 1.9px;
+    background: #F6F8F9;
+}
+
+.border-table-rows {
+    border-top: 1.141px solid rgba(0, 0, 0, 0.10);
+}
+
 .form-shadow {
     box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.05), 4px 0px 4px 0px rgba(0, 0, 0, 0.05), -4px 0px 4px 0px rgba(0, 0, 0, 0.05), 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
 }

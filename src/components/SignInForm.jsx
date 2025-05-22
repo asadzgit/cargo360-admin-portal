@@ -55,7 +55,7 @@ const SignInForm = () => {
       await new Promise((resolve) => setTimeout(resolve, 1500))
       console.log('Form submitted successfully:', formData)
       toast.success('Signed in successfully!')
-      navigate('/products')
+      navigate('/')
       // Redirect user to dashboard or show success message
     } catch (error) {
       console.error('Signin failed', error)

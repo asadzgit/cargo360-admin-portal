@@ -1,0 +1,30 @@
+<svg width="320" height="200" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Fill -->
+  <defs>
+    <linearGradient id="areaGradientRed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Filled Area under Line -->
+  <path d="M20 20 L100 80 L200 70 L300 180 L300 200 L20 200 Z"
+        fill="url(#areaGradientRed)" />
+
+  <!-- Line Path -->
+  <path d="M20 20 L100 80 L200 70 L300 180"
+        stroke="#ef4444"
+        stroke-width="5"
+        fill="none"
+        stroke-linecap="round" />
+
+  <!-- Data Point Circles -->
+  <g fill="#ffffff" stroke="#ef4444" stroke-width="5">
+    <circle cx="100" cy="80" r="6" />
+    <circle cx="200" cy="70" r="6" />
+  </g>
+  <g stroke="#fecaca" stroke-width="4" fill="none">
+    <circle cx="100" cy="80" r="14" />
+    <circle cx="200" cy="70" r="14" />
+  </g>
+</svg>

@@ -19,7 +19,7 @@ const Navbar = () => {
   ]
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white main-navbar">
       <div className="w-full max-w-full mx-auto pl-[56px] pr-[72px] py-[16px] flex items-center justify-between">
         <div className="flex flex-row items-end gap-2">
           <img src={applogo}></img>

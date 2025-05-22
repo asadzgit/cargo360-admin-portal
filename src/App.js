@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Layout from './components/Layout.jsx'
 import ChangePassword from './pages/ChangePassword.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import Products from './pages/Products.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
@@ -27,6 +28,7 @@ function App() {
           <Route path="/verify-code" element={<VerifyCode />} />
 
           <Route element={<Layout />}>
+            <Route path="/" element={<Dashboard />} />
             <Route path="/products" element={<Products />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/approvals" element={<SalesApprovalsPage />} />

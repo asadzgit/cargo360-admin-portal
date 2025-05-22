@@ -1,0 +1,32 @@
+<svg width="320" height="200" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Fill -->
+  <defs>
+    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Filled Area under Line -->
+  <path d="M20 180 L100 80 L200 110 L300 20 L300 200 L20 200 Z"
+        fill="url(#areaGradient)" />
+
+  <!-- Line Path -->
+  <path d="M20 180 L100 80 L200 110 L300 20"
+        stroke="#22c55e"
+        stroke-width="5"
+        fill="none"
+        stroke-linecap="round" />
+
+  <!-- Circles with Rings -->
+  <g fill="#ffffff" stroke="#22c55e" stroke-width="5">
+    <circle cx="100" cy="80" r="6" />
+    <circle cx="200" cy="110" r="6" />
+    <circle cx="300" cy="20" r="6" />
+  </g>
+  <g stroke="#bbf7d0" stroke-width="4" fill="none">
+    <circle cx="100" cy="80" r="14" />
+    <circle cx="200" cy="110" r="14" />
+    <circle cx="300" cy="20" r="14" />
+  </g>
+</svg>
