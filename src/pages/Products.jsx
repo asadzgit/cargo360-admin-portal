@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import productimage from '../assets/images/product-image.png'
+import truckImage from '../assets/images/truck.png'
 import RankBadgeIcon from '../components/RankBadgeIcon.jsx'
 
 const Products = () => {
@@ -10,42 +10,42 @@ const Products = () => {
       price: '$189',
       commission: '$10 Commission',
       category: 'general wellness',
-      image: productimage,
+      image: truckImage,
     },
     {
       name: 'Healthify',
       price: '$99',
       commission: '$8 Commission',
       category: 'fitness',
-      image: productimage,
+      image: truckImage,
     },
     {
       name: 'FitFuel',
       price: '$149',
       commission: '$12 Commission',
       category: 'general wellness',
-      image: productimage,
+      image: truckImage,
     },
     {
       name: 'VitaMax',
       price: '$129',
       commission: '$9 Commission',
       category: 'fitness',
-      image: productimage,
+      image: truckImage,
     },
     {
       name: 'ImmunoCare',
       price: '$89',
       commission: '$7 Commission',
       category: 'general wellness',
-      image: productimage,
+      image: truckImage,
     },
     {
       name: 'EnergyPlus',
       price: '$199',
       commission: '$15 Commission',
       category: 'general wellness',
-      image: productimage,
+      image: truckImage,
     },
   ]
   const [products, setProducts] = useState(initialProducts)
@@ -83,7 +83,7 @@ const Products = () => {
               fill="#9D00FF"
             />
           </svg>
-          <h1 className="text-2xl font-bold">Products</h1>
+          <h1 className="text-2xl font-bold">Vehicles</h1>
         </div>
         <div className="flex justify-between items-center mb-4 gap-[18px]">
           <input
@@ -94,14 +94,14 @@ const Products = () => {
             className="search-input border rounded px-4 py-2 pr-10 focus:outline-none"
           />
           <div className="flex items-center gap-4">
-            <select
+            {/* <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="border rounded px-3 py-2 focus:outline-none text-blueBrand-normal"
             >
               <option value="General Wellness">General Wellness</option>
               <option value="Fitness">Fitness</option>
-            </select>
+            </select> */}
             <button
               onClick={() => {
                 setSearchTerm('')
@@ -132,18 +132,18 @@ const Products = () => {
             <div className="flex justify-between mt-[20px]">
               <div>
                 <h2 className="text-lg font-semibold mb-1">{product.name}</h2>
-                <p className="text-gray-800 mb-2">{product.price}</p>
+                {/* <p className="text-gray-800 mb-2">{product.price}</p> */}
               </div>
               <div className="p-2 bg-[#F6F8F9] border-6">
-                <img src={productimage} width={72}></img>
+                <img src={truckImage} width={72}></img>
               </div>
             </div>
             <div className="mt-15 flex justify-between">
-              <div>
+              {/* <div>
                 <button className="bg-purpleBrand-dark hover:bg-purpleBrand-normalHover text-white text-sm px-2 py-1 px-4 border-200 mb-3">
                   {product.commission}
                 </button>
-              </div>
+              </div> */}
               <div>
                 <div className="flex gap-4">
                   <button className="flex text-purpleBrand-dark hover:underline text-sm">
@@ -156,11 +156,11 @@ const Products = () => {
                     >
                       <path
                         d="M10.8022 3.05066L10.8623 3.08532C11.381 3.3848 11.8136 3.63453 12.1303 3.87896C12.4647 4.13695 12.73 4.43308 12.8411 4.84787C12.9523 5.26266 12.8706 5.65179 12.71 6.04239C12.5986 6.3135 12.4347 6.61815 12.2373 6.96567L11.8138 6.71393L11.8083 6.71073L7.19145 4.04518L6.75969 3.7907C6.95975 3.44998 7.14 3.15896 7.31747 2.92899C7.57546 2.59467 7.87159 2.32932 8.28638 2.21818C8.70117 2.10703 9.0903 2.18877 9.48089 2.3493C9.85094 2.50139 10.2835 2.75115 10.8022 3.05066Z"
-                        fill="#7600BF"
+                        fill="#152a63"
                       />
                       <path
                         d="M6.25874 4.65622L3.94009 8.67216C3.74157 9.01536 3.58459 9.28673 3.52644 9.5954C3.46828 9.90407 3.51574 10.214 3.57576 10.6059L3.59193 10.7118C3.70272 11.4394 3.79404 12.0391 3.93177 12.4939C4.07582 12.9695 4.29726 13.3812 4.73277 13.6326C5.16828 13.884 5.63553 13.87 6.11945 13.7569C6.58216 13.6488 7.14718 13.428 7.83267 13.1602L7.9325 13.1212C8.30192 12.9773 8.59402 12.8634 8.83226 12.6587C9.0705 12.454 9.22702 12.1824 9.42498 11.8389L11.7381 7.83227L11.3056 7.57517L6.68563 4.90784L6.25874 4.65622Z"
-                        fill="#7600BF"
+                        fill="#152a63"
                       />
                     </svg>
                     Edit

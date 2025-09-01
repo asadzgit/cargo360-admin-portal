@@ -110,7 +110,7 @@ const SalesApprovalsPage = () => {
   }
 
   const handleRowClick = (userName) => {
-    navigate(`/approvals/${userName}`)
+    navigate(`/orders/${userName}`)
   }
 
   return (
@@ -120,7 +120,7 @@ const SalesApprovalsPage = () => {
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             {username && (
               <button
-                onClick={() => navigate('/approvals')}
+                onClick={() => navigate('/orders')}
                 className="text-gray-600 hover:text-black"
               >
                 ←
@@ -130,7 +130,7 @@ const SalesApprovalsPage = () => {
               <img src={payoutsIcon} alt="icon" />
             </span>
             <span className="modal-heading">
-              {username ? `Payout Requests (${username})` : 'Payout Requests'}
+              {username ? `Orders (${username})` : 'Orders'}
             </span>
           </h2>
 
@@ -159,7 +159,7 @@ const SalesApprovalsPage = () => {
                 onClick={() => {
                   setStatusFilter('Pending')
                   setDateFilter('Recent Requests')
-                  navigate('/approvals') // optional
+                  navigate('/orders') // optional
                 }}
               >
                 View All

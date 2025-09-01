@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
 import Layout from './components/Layout.jsx'
+import BookingPage from './pages/BookingPage.jsx'
 import ChangePassword from './pages/ChangePassword.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
@@ -29,14 +30,12 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="/vehicles" element={<Products />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/approvals" element={<SalesApprovalsPage />} />
-            <Route
-              path="/approvals/:username"
-              element={<SalesApprovalsPage />}
-            />
+            <Route path="/orders" element={<SalesApprovalsPage />} />
+            <Route path="/orders/:username" element={<SalesApprovalsPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/booking" element={<BookingPage />} />
           </Route>
         </Routes>
       </Router>

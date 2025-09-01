@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import {
   LineChart,
   Line,
@@ -14,10 +15,10 @@ import cartIcon from '../assets/images/cart-icon.svg'
 import coinIcon from '../assets/images/coins-icon.svg'
 import negativeTrendIcon from '../assets/images/negative-trend.svg'
 import positiveTrendIcon from '../assets/images/positive-trend.svg'
-import productImage from '../assets/images/product-image.png'
 import tagIcon from '../assets/images/tag-icon.svg'
 import trendDown from '../assets/images/trend-down.svg'
 import trendUp from '../assets/images/trend-up.svg'
+import truckImage from '../assets/images/truck.png'
 
 const salesData = [
   { day: 'Mon 15', value: 10000 },
@@ -66,27 +67,27 @@ export default function Dashboard() {
     <div className="px-[87px] pt-[30px] min-h-screen">
       <h1 className="welcome-text mb-[10px]">Welcome, Katherine</h1>
       <p className="welcome-subheading mb-[30px]">
-        Have a look at recent stats
+        {/* Have a look at recent stats */}
       </p>
 
       {/* Time Range Buttons */}
-      <div className="flex gap-[12px] mb-[30px]">
+      {/* <div className="flex gap-[12px] mb-[30px]">
         {['Today', 'Week', 'Month', 'Year', 'Custom date'].map((label, i) => (
           <button
             key={i}
             className={`px-[12px] py-[8px] rounded-[6px] time-range-button  ${
               label === 'Week'
-                ? 'bg-[#7600BF] text-white border-[#7600BF]'
+                ? 'bg-[#152a63] text-white border-[#152a63]'
                 : 'bg-white text-[#546881] border-[#B2BBC6;]'
             }`}
           >
             {label}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] mb-[30px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px]">
         {/* Total Orders */}
         <div className="metric-item">
           <div className="flex items-center gap-[12px]">
@@ -98,23 +99,88 @@ export default function Dashboard() {
           <div className="flex gap-[16px] justify-between w-[100%]">
             <div className="flex flex-col gap-[4px]">
               <p className="metric-value">400</p>
-              <p className="-1 metric-analytics text-[#079455] flex gap-[8px]">
+              {/* <p className="-1 metric-analytics text-[#079455] flex gap-[8px]">
                 <span className="flex gap-[4px]">
                   <img src={trendUp}></img> <span>10%</span>
                 </span>
                 <span className="text-[#B2BBC6]">vs last week</span>
-              </p>
+              </p> */}
             </div>
-            <img
+            {/* <img
               src={positiveTrendIcon}
               width="128px"
               style={{ height: '64px' }}
-            ></img>
+            ></img> */}
           </div>
         </div>
 
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          <a href="#">
+            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              View all Users
+            </h5>
+          </a>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            View all types of users registered on the platfor, either as a
+            driver, a broker or as admins
+          </p>
+          <a
+            href="#"
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purpleBrand-normal rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <Link to="/users">Go to users page</Link>
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          <a href="#">
+            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              View all Orders
+            </h5>
+          </a>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            View all orders placed on the system
+          </p>
+          <a
+            href="#"
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purpleBrand-normal rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <Link to="/orders">Go to orders page</Link>
+            <svg
+              className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </a>
+        </div>
+
         {/* Total Sell */}
-        <div className="metric-item">
+        {/* <div className="metric-item">
           <div className="flex items-center gap-[12px]">
             <div className="p-[12px] rounded-[10px] metric-item-icon">
               <img src={coinIcon}></img>
@@ -138,10 +204,10 @@ export default function Dashboard() {
               style={{ height: '64px' }}
             ></img>
           </div>
-        </div>
+        </div> */}
 
         {/* Total Payouts */}
-        <div className="metric-item">
+        {/* <div className="metric-item">
           <div className="flex items-center gap-[12px]">
             <div className="p-[12px] rounded-[10px] metric-item-icon">
               <img src={tagIcon}></img>
@@ -159,13 +225,12 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Sales Chart + Table */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-[34px]">
-        {/* Total Sales Chart */}
-        <div className="lg:col-span-2 p-[18.25px] chart">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-[34px]"> */}
+      {/* <div className="lg:col-span-2 p-[18.25px] chart">
           <div className="flex gap-[9.12px] mb-[27.37px]">
             <h3 className="chart-title">Total Sales</h3>
             <span className="chart-date-rrange">March 15 - March 21</span>
@@ -179,16 +244,16 @@ export default function Dashboard() {
               <Line
                 type="linear"
                 dataKey="value"
-                stroke="#7600BF"
+                stroke="#152a63"
                 strokeWidth="2.281px"
                 dot={false}
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </div> */}
 
-        {/* Best Selling Products */}
-        <div className="best-products">
+      {/* Best Selling Products */}
+      {/* <div className="best-products">
           <div className="flex justify-between items-center mb-[13.69px]">
             <h3 className="chart-title">Best selling products</h3>
             <select className="product-date-range">
@@ -219,7 +284,7 @@ export default function Dashboard() {
                   <td className="flex items-center gap-2 py-[18.25px]">
                     <div className="table-image-container">
                       <img
-                        src={productImage}
+                        src={truckImage}
                         width={20}
                         alt="icon"
                         className="rounded"
@@ -233,8 +298,8 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </div>
   )
 }

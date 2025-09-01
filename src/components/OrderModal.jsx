@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
 
-import productImage from '../assets/images/product-image.png'
+import truckImage from '../assets/images/truck.png'
 
 const OrderModal = ({ order, onClose }) => {
   if (!order) return null
@@ -62,7 +62,7 @@ const OrderModal = ({ order, onClose }) => {
           </h3>
           <div className="input-border px-[20px] py-[13px] mb-4 flex items-center gap-3">
             <img
-              src={productImage}
+              src={truckImage}
               alt="Product"
               className="h-12 w-12 rounded object-cover"
             />

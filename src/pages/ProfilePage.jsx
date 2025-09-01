@@ -52,7 +52,7 @@ const ProfilePage = () => {
       await new Promise((resolve) => setTimeout(resolve, 1500))
       console.log('Profile updated:', formData)
       toast.success('Profile updated successfully')
-      navigate('/products')
+      navigate('/vehicles')
       // Add toast or notification here
     } catch (error) {
       console.error('Failed to update profile:', error)
@@ -178,7 +178,7 @@ const ProfilePage = () => {
                   lastName: '',
                   emailOrPhone: 'katherine@gmail.com',
                 })
-                navigate('/products')
+                navigate('/vehicles')
               }}
               className="text-blueBrand-dark text-purpleBrand-normal px-6 py-2 rounded-md transition"
             >

@@ -5,16 +5,16 @@ module.exports = {
     extend: {
       colors: {
         purpleBrand: {
-          light: '#f5e6ff',
-          lightHover: '#f0d9ff',
-          lightActive: '#e1b0ff',
-          normal: '#9d00ff',
-          normalHover: '#8d00e6',
-          normalActive: '#7e00cc',
-          dark: '#7600bf',
-          darkHover: '#5e0099',
-          darkActive: '#470073',
-          darker: '#370059',
+          light: '#e0e7ff',
+          lightHover: '#c7d2fe',
+          lightActive: '#a5b4fc',
+          normal: '#1e3a8a',
+          normalHover: '#1b357d',
+          normalActive: '#182f70',
+          dark: '#152a63',
+          darkHover: '#122455',
+          darkActive: '#0e1d47',
+          darker: '#0b1739',
         },
         blueBrand: {
           lighter: '#B2BBC6',
