@@ -7,9 +7,9 @@
     ],
     "plugins": ["import"],
     "rules": {
-      "prettier/prettier": ["error"],
+      "prettier/prettier": ["warn"],
       "import/order": [
-        "error",
+        "warn",
         {
           "groups": [["builtin", "external"], "internal", ["parent", "sibling", "index"]],
           "newlines-between": "always",

@@ -3,10 +3,12 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useAuth } from '../contexts/AuthContext'
 import appleIcon from '../assets/images/apple-logo.svg'
 
 const SignInForm = () => {
   const navigate = useNavigate()
+  const { login, isLoading, error, clearError } = useAuth()
   const [formData, setFormData] = useState({
     emailOrPhone: '',
     password: '',
@@ -48,17 +50,25 @@ const SignInForm = () => {
       return
     }
 
+    // Clear any previous auth errors
+    clearError()
     setIsSubmitting(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log('Form submitted successfully:', formData)
-      toast.success('Signed in successfully!')
-      navigate('/')
-      // Redirect user to dashboard or show success message
+      // Use the auth service to login
+      const result = await login(formData.emailOrPhone, formData.password)
+
+      if (result.success) {
+        toast.success(result.message || 'Signed in successfully!')
+        navigate('/')
+      } else {
+        toast.error(result.error || 'Login failed')
+        setErrors({ general: result.error })
+      }
     } catch (error) {
       console.error('Signin failed', error)
+      toast.error('An unexpected error occurred')
+      setErrors({ general: 'An unexpected error occurred' })
     } finally {
       setIsSubmitting(false)
     }
@@ -71,10 +81,17 @@ const SignInForm = () => {
           Sign In
         </h2>
         <p className="text-center mb-[30px] text-blueBrand-lighter form-subheading">
-          Access your dashboard and stay on top of your performance.
+          Access admin dashboard and stay on top of your application.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-[20px]" noValidate>
+          {/* Display general error */}
+          {(errors.general || error) && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {errors.general || error}
+            </div>
+          )}
+
           {/* Email or Phone */}
           <div>
             <label className="block text-blueBrand-dark form-label mb-1">
@@ -85,11 +102,10 @@ const SignInForm = () => {
               name="emailOrPhone"
               value={formData.emailOrPhone}
               onChange={handleChange}
-              className={`w-full border input-border p-[15px] focus:outline-none ${
-                errors.emailOrPhone
+              className={`w-full border input-border p-[15px] focus:outline-none ${errors.emailOrPhone
                   ? 'border-red-500'
                   : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
-              }`}
+                }`}
               placeholder="Enter your email"
             />
             {errors.emailOrPhone && (
@@ -110,11 +126,10 @@ const SignInForm = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full border input-border p-[15px] focus:outline-none ${
-                      errors.password
+                    className={`w-full border input-border p-[15px] focus:outline-none ${errors.password
                         ? 'border-red-500'
                         : 'border-blueBrand-lighter focus:border-purpleBrand-normal'
-                    }`}
+                      }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -145,16 +160,16 @@ const SignInForm = () => {
             {isSubmitting ? 'Signing in...' : 'Login'}
           </button>
         </form>
-        <div className="flex justify-end my-[15px]">
+        {/* <div className="flex justify-end my-[15px]">
           <a
             href="/forgot-password"
             className="text-purpleBrand-normal hover:underline"
           >
             Forgot Password?
           </a>
-        </div>
+        </div> */}
         {/* OAuth Buttons */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
           <button
             type="button"
             className="w-full input-border p-[15px] flex items-center justify-center gap-2 hover:bg-gray-50"
@@ -177,15 +192,15 @@ const SignInForm = () => {
               Sign up with Apple
             </span>
           </button>
-        </div>
+        </div> */}
 
         {/* Sign In Link */}
-        <p className="text-center text-blueBrand-dark fomr-subheading mt-[20px]">
+        {/* <p className="text-center text-blueBrand-dark fomr-subheading mt-[20px]">
           Don’t have an account?{' '}
           <a href="/signup" className="text-purpleBrand-normal hover:underline">
             Sign up
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   )

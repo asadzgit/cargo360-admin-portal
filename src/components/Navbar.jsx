@@ -34,11 +34,10 @@ const Navbar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`pr-[48px] form-subheading leading-[24px] ${
-                location.pathname === item.path
+              className={`pr-[48px] form-subheading leading-[24px] ${location.pathname === item.path
                   ? 'text-purpleBrand-dark'
                   : 'text-blueBrand-lighter hover:text-purpleBrand-darkHover'
-              }`}
+                }`}
               style={{
                 fontWeight: `${location.pathname === item.path ? '700' : ''}`,
               }}
@@ -58,9 +57,9 @@ const Navbar = () => {
             onClose={() => setShowModal(false)}
           />
           {/* <img src={bellIcon} className="mx-[16px]"></img> */}
-          <Link to="/profile">
+          {/* <Link to="/profile">
             <img src={userAvatar}></img>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </nav>

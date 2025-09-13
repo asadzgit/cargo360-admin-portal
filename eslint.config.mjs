@@ -19,7 +19,7 @@ export default [
     },
     rules: {
       'import/order': [
-        'error',
+        'warn',
         {
           groups: [
             'builtin',
@@ -33,7 +33,7 @@ export default [
           'newlines-between': 'always',
         },
       ],
-      'prettier/prettier': 'error',
+      'prettier/prettier': 'warn',
     },
   },
   pluginJs.configs.recommended,

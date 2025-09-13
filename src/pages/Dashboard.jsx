@@ -65,7 +65,7 @@ const payoutTrend = [
 export default function Dashboard() {
   return (
     <div className="px-[87px] pt-[30px] min-h-screen">
-      <h1 className="welcome-text mb-[10px]">Welcome, Katherine</h1>
+      {/* <h1 className="welcome-text mb-[10px]">Welcome, Katherine</h1> */}
       <p className="welcome-subheading mb-[30px]">
         {/* Have a look at recent stats */}
       </p>
@@ -89,7 +89,7 @@ export default function Dashboard() {
       {/* Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px]">
         {/* Total Orders */}
-        <div className="metric-item">
+        {/* <div className="metric-item">
           <div className="flex items-center gap-[12px]">
             <div className="p-[12px] rounded-[10px] metric-item-icon">
               <img src={cartIcon}></img>
@@ -99,20 +99,20 @@ export default function Dashboard() {
           <div className="flex gap-[16px] justify-between w-[100%]">
             <div className="flex flex-col gap-[4px]">
               <p className="metric-value">400</p>
-              {/* <p className="-1 metric-analytics text-[#079455] flex gap-[8px]">
+              <p className="-1 metric-analytics text-[#079455] flex gap-[8px]">
                 <span className="flex gap-[4px]">
                   <img src={trendUp}></img> <span>10%</span>
                 </span>
                 <span className="text-[#B2BBC6]">vs last week</span>
-              </p> */}
+              </p>
             </div>
-            {/* <img
+            <img
               src={positiveTrendIcon}
               width="128px"
               style={{ height: '64px' }}
-            ></img> */}
+            ></img>
           </div>
-        </div>
+        </div> */}
 
         <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
@@ -125,7 +125,7 @@ export default function Dashboard() {
             driver, a broker or as admins
           </p>
           <a
-            href="#"
+            href="/users"
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purpleBrand-normal rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <Link to="/users">Go to users page</Link>
@@ -157,7 +157,7 @@ export default function Dashboard() {
             View all orders placed on the system
           </p>
           <a
-            href="#"
+            href="/orders"
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-purpleBrand-normal rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <Link to="/orders">Go to orders page</Link>
