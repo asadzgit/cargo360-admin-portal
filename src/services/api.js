@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // Base API configuration for Cargo360
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000'
+const API_BASE_URL = 'https://cargo360-api.onrender.com/'
 
 // Create axios instance with base configuration
 const axiosInstance = axios.create({
@@ -48,7 +48,6 @@ const getAuthHeaders = () => {
 
 // API request wrapper with authentication (maintains fetch-like interface)
 const apiRequest = async (endpoint, options = {}) => {
-  console.log(getAuthHeaders())
   try {
     const response = await axiosInstance({
       url: endpoint,

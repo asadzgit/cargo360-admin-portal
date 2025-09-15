@@ -6,6 +6,7 @@ import { useApp } from '../contexts/AppContext'
 import { shipmentsService } from '../services/shipmentsService'
 import OrderModal from '../components/OrderModal.jsx'
 import AssignmentModal from '../components/AssignmentModal.jsx'
+import EditShipmentModal from '../components/EditShipmentModal.jsx'
 import payoutsIcon from '../assets/images/payouts-icon.svg'
 
 const SalesApprovalsPage = () => {
@@ -16,6 +17,7 @@ const SalesApprovalsPage = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [assignmentOrder, setAssignmentOrder] = useState(null)
+  const [editOrder, setEditOrder] = useState(null)
   const [dateFilter, setDateFilter] = useState('Recent Requests')
 
   // Fetch shipments on component mount
@@ -125,6 +127,22 @@ const SalesApprovalsPage = () => {
         toast.error('An error occurred while deleting shipment')
       }
     }
+  }
+
+  const handleEditShipment = (req) => {
+    setEditOrder({
+      orderId: req.orderId,
+      shipmentId: req.orderId.replace('SHP-', ''),
+      customer: req.userName,
+      status: req.status,
+      shipmentData: req.shipmentData,
+    })
+  }
+
+  const handleUpdateShipment = (updatedShipment) => {
+    // Update the shipment in the context
+    dispatch({ type: actions.UPDATE_SHIPMENT, payload: updatedShipment })
+    fetchShipments() // Refresh the list to get latest data
   }
 
   const handleRowClick = (userName) => {
@@ -368,6 +386,15 @@ const SalesApprovalsPage = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
+                          handleEditShipment(req)
+                        }}
+                        className="action-button text-[#17B26A] hover:underline text-xs"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
                           handleDeleteShipment(req.orderId)
                         }}
                         className="action-button text-[#DC3434] hover:underline text-xs"
@@ -412,6 +439,14 @@ const SalesApprovalsPage = () => {
           shipment={assignmentOrder}
           onClose={() => setAssignmentOrder(null)}
           onAssign={handleAssignSubmit}
+        />
+      )}
+
+      {editOrder && (
+        <EditShipmentModal
+          shipment={editOrder}
+          onClose={() => setEditOrder(null)}
+          onUpdate={handleUpdateShipment}
         />
       )}
     </div >

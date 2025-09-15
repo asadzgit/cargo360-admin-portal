@@ -18,6 +18,7 @@ import Signin from './pages/Signin.jsx'
 import Signup from './pages/Signup.jsx'
 import UsersPage from './pages/UsersPage.jsx'
 import VerifyCode from './pages/VerifyCode.jsx'
+import DriverLocationPage from './pages/DriverLocationPage.jsx'
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
             {/* <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/verify-code" element={<VerifyCode />} /> */}
+
+            {/* Public route for cross-application driver location tracking */}
+            <Route path="/track/:shipmentId" element={<DriverLocationPage />} />
 
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/" element={<Dashboard />} />

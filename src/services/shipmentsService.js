@@ -6,7 +6,7 @@ export const shipmentsService = {
   getAllShipments: async (filters = {}) => {
     try {
       const queryParams = new URLSearchParams()
-      
+
       if (filters.status) {
         queryParams.append('status', filters.status)
       }
@@ -15,7 +15,7 @@ export const shipmentsService = {
       }
 
       const endpoint = `/shipments${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
-      
+
       const response = await apiRequest(endpoint, {
         method: 'GET',
       })
@@ -123,6 +123,76 @@ export const shipmentsService = {
         success: false,
         error: error.message,
         message: `Failed to assign shipment to ${assignment}`,
+      }
+    }
+  },
+
+  // Get current location of a shipment
+  getCurrentLocation: async (shipmentId) => {
+    try {
+      const response = await apiRequest(`/location/shipments/${shipmentId}/current`, {
+        method: 'GET',
+      })
+
+      return {
+        success: true,
+        data: response.data,
+        message: 'Current location retrieved successfully',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to retrieve current location',
+        data: null,
+      }
+    }
+  },
+
+  // Get shipment details by ID (for tracking page)
+  getShipmentById: async (shipmentId) => {
+    try {
+      const response = await apiRequest(`/shipments/${shipmentId}`, {
+        method: 'GET',
+      })
+
+      return {
+        success: true,
+        data: response.data,
+        message: 'Shipment details retrieved successfully',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to retrieve shipment details',
+        data: null,
+      }
+    }
+  },
+
+  // Admin update shipment
+  adminUpdateShipment: async (shipmentId, updateData) => {
+    try {
+      const response = await apiRequest(`/admin/shipments/${shipmentId}`, {
+        method: 'PUT',
+        body: JSON.stringify(updateData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      return {
+        success: true,
+        data: response.data,
+        message: 'Shipment updated successfully by admin',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to update shipment',
+        data: null,
       }
     }
   },

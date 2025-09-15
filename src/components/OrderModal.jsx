@@ -1,12 +1,18 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, { useState } from 'react'
 
 import truckImage from '../assets/images/truck.png'
+import LocationModal from './LocationModal.jsx'
 
 const OrderModal = ({ order, onClose }) => {
+  const [showLocationModal, setShowLocationModal] = useState(false)
+
   if (!order) return null
 
   const shipmentData = order.shipmentData || {}
+
+  // Check if shipment is trackable (in_transit or picked_up)
+  const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -19,6 +25,14 @@ const OrderModal = ({ order, onClose }) => {
             ←
           </button>
           <h2 className="modal-heading text-center flex-1">Shipment Details</h2>
+          {isTrackable && (
+            <button
+              onClick={() => setShowLocationModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+            >
+              View Location
+            </button>
+          )}
           <div className="w-12"></div> {/* Spacer to balance the layout */}
         </div>
 
@@ -238,6 +252,20 @@ const OrderModal = ({ order, onClose }) => {
           )}
         </div>
       </div>
+
+      {/* Location Modal */}
+      {showLocationModal && (
+        <LocationModal
+          shipment={{
+            orderId: order.orderId,
+            shipmentId: order.orderId.replace('SHP-', ''),
+            customer: order.customer,
+            status: shipmentData.status,
+            shipmentData: shipmentData
+          }}
+          onClose={() => setShowLocationModal(false)}
+        />
+      )}
     </div>
   )
 }
