@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { useApp } from '../contexts/AppContext'
+import { useAuth } from '../contexts/AuthContext'
 import { shipmentsService } from '../services/shipmentsService'
 import OrderModal from '../components/OrderModal.jsx'
 import AssignmentModal from '../components/AssignmentModal.jsx'
@@ -13,12 +14,16 @@ const SalesApprovalsPage = () => {
   const { username } = useParams()
   const navigate = useNavigate()
   const { shipments, loading, error, dispatch, actions } = useApp()
+  const { user } = useAuth()
 
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [assignmentOrder, setAssignmentOrder] = useState(null)
   const [editOrder, setEditOrder] = useState(null)
   const [dateFilter, setDateFilter] = useState('Recent Requests')
+
+  // Check if current user is admin
+  const isAdmin = user?.role === 'admin'
 
   // Fetch shipments on component mount
   useEffect(() => {
@@ -383,24 +388,28 @@ const SalesApprovalsPage = () => {
                           </button>
                         </>
                       )}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleEditShipment(req)
-                        }}
-                        className="action-button text-[#17B26A] hover:underline text-xs"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleDeleteShipment(req.orderId)
-                        }}
-                        className="action-button text-[#DC3434] hover:underline text-xs"
-                      >
-                        Delete
-                      </button>
+                      {isAdmin && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEditShipment(req)
+                            }}
+                            className="action-button text-[#17B26A] hover:underline text-xs"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteShipment(req.orderId)
+                            }}
+                            className="action-button text-[#DC3434] hover:underline text-xs"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
