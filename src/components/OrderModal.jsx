@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
+import { shipmentsService } from '../services/shipmentsService'
 
 import truckImage from '../assets/images/truck.png'
 import LocationModal from './LocationModal.jsx'
@@ -14,6 +15,16 @@ const OrderModal = ({ order, onClose }) => {
   // Check if shipment is trackable (in_transit or picked_up)
   const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
 
+  // Accept/Reject discount request
+  const handleAcceptDiscountRequest = async (discountRequestId, action) => {
+    const result = await shipmentsService.decideDiscountRequest(discountRequestId, action)
+    if (result.success) {
+      window.alert(result.message || 'Decision recorded')
+      onClose()
+    } else {
+      window.alert(result.error || result.message || 'Failed to decide discount request')
+    }
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg w-[1000px] max-h-[90vh] overflow-y-auto pt-[30px] pb-[30px] px-[40px] relative">
@@ -133,7 +144,46 @@ const OrderModal = ({ order, onClose }) => {
                     {shipmentData.cargoSize || 'Not specified'}
                   </span>
                 </div>
+                <div className="flex flex-col gap-[10px]">
+                  <span className="text-blueBrand-lighter form-label">
+                    Budget (PKR)
+                  </span>
+                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                    {shipmentData.budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 'Not specified'}
+                  </span>
+                </div>
               </div>
+              {shipmentData.DiscountRequest && (
+                <div className="flex flex-col gap-[10px]" style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '50%' }}>
+                  <span className="text-blueBrand-lighter form-label">
+                    Discount Request
+                  </span>
+                  <div className="flex flex-col gap-[10px]">
+                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                      Amount: {shipmentData.DiscountRequest.requestAmount}
+                    </span>
+                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                      Status: {shipmentData.DiscountRequest.status}
+                    </span>
+                    {shipmentData.DiscountRequest.status === 'pending' && (
+                      <div className="flex gap-[10px]">
+                        <button
+                          className="btn btn-primary"
+                          style={{ backgroundColor: '#FFB8B8', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                          onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'accept')}>
+                          Accept
+                        </button>
+                        <button
+                          className="btn btn-error"
+                          style={{ backgroundColor: 'teal', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                          onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'reject')}>
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               {shipmentData.description && (
                 <div className="flex flex-col gap-[10px]">
                   <span className="text-blueBrand-lighter form-label">

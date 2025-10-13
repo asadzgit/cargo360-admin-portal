@@ -65,7 +65,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     if (shipment) {
       const existingVehicleType = shipment.shipmentData?.vehicleType || ''
       const isCustomVehicle = existingVehicleType && !vehicleTypes.find(v => v.id === existingVehicleType)
-      
+
       setFormData({
         pickupLocation: shipment.shipmentData?.pickupLocation || '',
         dropLocation: shipment.shipmentData?.dropLocation || '',
@@ -86,7 +86,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
       ...prev,
       [name]: value
     }))
-    
+
     // Clear custom vehicle type if switching away from "other"
     if (name === 'vehicleType' && value !== 'other') {
       setFormData(prev => ({
@@ -95,7 +95,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
         customVehicleType: ''
       }))
     }
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -150,7 +150,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -160,7 +160,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     try {
       // Prepare update data - only include non-empty fields
       const updateData = {}
-      
+
       Object.keys(formData).forEach(key => {
         const value = formData[key]
         if (value !== '' && value !== null && value !== undefined) {
@@ -397,7 +397,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
               <div>
                 <label className="text-blueBrand-lighter form-label block mb-2">
-                  Budget
+                  Budget (PKR)
                 </label>
                 <input
                   type="number"

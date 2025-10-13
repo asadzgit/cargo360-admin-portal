@@ -237,4 +237,26 @@ export const shipmentsService = {
       }
     }
   },
+  // Decide discount request (Admin only)
+  decideDiscountRequest: async (discountRequestId, action) => {
+    try {
+      const response = await apiRequest(`/discount-requests/${discountRequestId}`, {
+        method: 'PATCH',
+        body: { action },
+      })
+
+      return {
+        success: true,
+        data: response.data?.discountRequest || response.discountRequest,
+        message: response.message || 'Decision recorded',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to decide discount request',
+        data: null,
+      }
+    }
+  },
 }
