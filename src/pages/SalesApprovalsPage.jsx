@@ -50,7 +50,7 @@ const SalesApprovalsPage = () => {
 
   // Transform shipments data to match the UI format
   const transformedShipments = shipments.map(shipment => ({
-    orderId: `SHP-${shipment.id}`,
+    orderId: `C360-PK-${shipment.id}`,
     userName: shipment.Customer?.name || 'Unknown Customer',
     productName: shipment.cargoType || 'Cargo',
     payout: shipment.budget || 0,
@@ -82,7 +82,7 @@ const SalesApprovalsPage = () => {
   })
 
   const handleAccept = async (orderId) => {
-    const shipmentId = orderId.replace('SHP-', '')
+    const shipmentId = orderId.replace('C360-PK-', '')
 
     try {
       const result = await shipmentsService.updateShipmentStatus(shipmentId, 'accepted')
@@ -99,7 +99,7 @@ const SalesApprovalsPage = () => {
   }
 
   const handleDecline = async (orderId) => {
-    const shipmentId = orderId.replace('SHP-', '')
+    const shipmentId = orderId.replace('C360-PK-', '')
 
     try {
       const result = await shipmentsService.updateShipmentStatus(shipmentId, 'cancelled')
@@ -116,7 +116,7 @@ const SalesApprovalsPage = () => {
   }
 
   const handleDeleteShipment = async (orderId) => {
-    const shipmentId = orderId.replace('SHP-', '')
+    const shipmentId = orderId.replace('C360-PK-', '')
 
     if (window.confirm('Are you sure you want to delete this shipment?')) {
       try {
@@ -137,7 +137,7 @@ const SalesApprovalsPage = () => {
   const handleEditShipment = (req) => {
     setEditOrder({
       orderId: req.orderId,
-      shipmentId: req.orderId.replace('SHP-', ''),
+      shipmentId: req.orderId.replace('C360-PK-', ''),
       customer: req.userName,
       status: req.status,
       shipmentData: req.shipmentData,
@@ -155,7 +155,7 @@ const SalesApprovalsPage = () => {
   }
 
   const handleAssignment = (orderId) => {
-    const shipmentId = orderId.replace('SHP-', '')
+    const shipmentId = orderId.replace('C360-PK-', '')
     const shipment = filteredRequests.find(req => req.orderId === orderId)
 
     if (shipment) {
@@ -170,7 +170,7 @@ const SalesApprovalsPage = () => {
   }
 
   const handleAssignSubmit = async (orderId, assignmentType, userId) => {
-    const shipmentId = orderId.replace('SHP-', '')
+    const shipmentId = orderId.replace('C360-PK-', '')
 
     try {
       const result = await shipmentsService.assignShipment(shipmentId, assignmentType, userId)

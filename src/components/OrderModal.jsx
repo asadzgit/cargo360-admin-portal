@@ -308,7 +308,7 @@ const OrderModal = ({ order, onClose }) => {
         <LocationModal
           shipment={{
             orderId: order.orderId,
-            shipmentId: order.orderId.replace('SHP-', ''),
+            shipmentId: order.orderId.replace('C360-PK-', ''),
             customer: order.customer,
             status: shipmentData.status,
             shipmentData: shipmentData
