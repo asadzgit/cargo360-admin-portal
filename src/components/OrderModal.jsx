@@ -103,6 +103,32 @@ const OrderModal = ({ order, onClose }) => {
             </div>
           </div>
 
+          <div>
+            <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+              Customer Details
+            </h3>
+            <div className="input-border px-[20px] py-[15px]">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex flex-col gap-[10px]">
+                  <span className="text-blueBrand-lighter form-label">
+                    Customer Name
+                  </span>
+                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                    {shipmentData.Customer?.name || 'Not specified'}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-[10px]">
+                  <span className="text-blueBrand-lighter form-label">
+                    Customer Phone
+                  </span>
+                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                    {shipmentData.Customer?.phone || 'Not specified'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Cargo Information */}
           <div>
             <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
@@ -149,7 +175,7 @@ const OrderModal = ({ order, onClose }) => {
                     Budget (PKR)
                   </span>
                   <span className="form-subheading" style={{ lineHeight: '20px' }}>
-                    {shipmentData.budget.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 'Not specified'}
+                    {shipmentData.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 'Not specified'}
                   </span>
                 </div>
               </div>
