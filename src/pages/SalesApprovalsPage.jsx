@@ -23,7 +23,7 @@ const SalesApprovalsPage = () => {
   const [dateFilter, setDateFilter] = useState('Recent Requests')
 
   // Check if current user is admin
-  const isAdmin = user?.email === 'muhammad.asad@cargo360pk.com';
+  const isAdmin = user?.email == 'muhammad.asad@cargo360pk.com' || user?.id == 126;
 
   // Fetch shipments on component mount
   useEffect(() => {
