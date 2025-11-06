@@ -166,9 +166,14 @@ const UsersPage = () => {
   }
 
   const filteredUsers = users.filter((user) => {
+    console.log({ user });
+
+
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      user.email?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+      user.phone?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+      user.company?.toLowerCase()?.includes(searchTerm.toLowerCase())
     const matchesAccount =
       selectedAccount === 'All Users' ||
       selectedAccount === '' ||
