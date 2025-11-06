@@ -260,6 +260,7 @@ const UsersPage = () => {
             <tr className="filter-button leading-[18px]">
               <th className="px-4 py-3">Full Name</th>
               <th className="px-4 py-3">Email Address</th>
+              <th className="px-4 py-3">Company</th>
               <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Joined Date</th>
@@ -276,6 +277,9 @@ const UsersPage = () => {
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
                   {user.email}
+                </td>
+                <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
+                  {user.company || 'N/A'}
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' :

@@ -125,6 +125,14 @@ const OrderModal = ({ order, onClose }) => {
                     {shipmentData.Customer?.phone || 'Not specified'}
                   </span>
                 </div>
+                <div className="flex flex-col gap-[10px]">
+                  <span className="text-blueBrand-lighter form-label">
+                    Company Name
+                  </span>
+                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                    {shipmentData.Customer?.company || 'Not specified'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
