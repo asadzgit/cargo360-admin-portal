@@ -260,6 +260,7 @@ const UsersPage = () => {
             <tr className="filter-button leading-[18px]">
               <th className="px-4 py-3">Full Name</th>
               <th className="px-4 py-3">Email Address</th>
+              <th className="px-4 py-3">Phone Number</th>
               <th className="px-4 py-3">Company</th>
               <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">Status</th>
@@ -277,6 +278,9 @@ const UsersPage = () => {
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
                   {user.email}
+                </td>
+                <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
+                  {user.phone || 'N/A'}
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
                   {user.company || 'N/A'}
