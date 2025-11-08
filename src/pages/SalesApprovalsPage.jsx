@@ -353,17 +353,19 @@ const SalesApprovalsPage = () => {
                   )}
                   <td className="px-[24px] py-[16px]">
                     <div className="flex gap-2">
+                      {req.status?.toLowerCase() != 'cancelled' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDecline(req.orderId)
+                          }}
+                          className="action-button text-[#DC3434] hover:underline text-xs"
+                        >
+                          Decline
+                        </button>
+                      )}
                       {req.status === 'pending' && (
                         <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleDecline(req.orderId)
-                            }}
-                            className="action-button text-[#DC3434] hover:underline text-xs"
-                          >
-                            Decline
-                          </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
