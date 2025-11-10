@@ -30,6 +30,16 @@ const SalesApprovalsPage = () => {
     fetchShipments()
   }, [])
 
+  // Auto-refresh every 10 seconds
+useEffect(() => {
+  const interval = setInterval(() => {
+    fetchShipments();
+  }, 10000); // 10 seconds
+
+  return () => clearInterval(interval); // Cleanup on unmount
+}, []);
+
+
   const fetchShipments = async () => {
     dispatch({ type: actions.SET_SHIPMENTS_LOADING, payload: true })
 

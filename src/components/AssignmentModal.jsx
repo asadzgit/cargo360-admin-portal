@@ -110,7 +110,7 @@ const AssignmentModal = ({ shipment, onClose, onAssign }) => {
                                     onChange={(e) => handleAssignmentTypeChange(e.target.value)}
                                     className="w-4 h-4"
                                 />
-                                <span className="form-subheading">Trucker</span>
+                                <span className="form-subheading">Broker</span>
                             </label>
                             <label className="flex items-center gap-2">
                                 <input

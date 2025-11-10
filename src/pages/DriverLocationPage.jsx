@@ -247,7 +247,7 @@ const DriverLocationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {shipmentData.assignedTrucker && (
                 <div>
-                  <h3 className="font-medium text-gray-700 mb-2">Assigned Trucker</h3>
+                  <h3 className="font-medium text-gray-700 mb-2">Assigned Broker</h3>
                   <div className="text-sm space-y-1">
                     <div>Name: {shipmentData.assignedTrucker.name}</div>
                     <div>Email: {shipmentData.assignedTrucker.email}</div>
