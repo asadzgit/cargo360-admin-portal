@@ -34,7 +34,7 @@ const SalesApprovalsPage = () => {
 useEffect(() => {
   const interval = setInterval(() => {
     fetchShipments();
-  }, 10000); // 10 seconds
+  }, 60000); // 10 seconds
 
   return () => clearInterval(interval); // Cleanup on unmount
 }, []);

@@ -26,7 +26,7 @@ const UsersPage = () => {
 useEffect(() => {
   const interval = setInterval(() => {
     fetchUsers();
-  }, 10000);
+  }, 60000);
 
   return () => clearInterval(interval); // cleanup
 }, []);
