@@ -1,0 +1,382 @@
+import React, { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { shipmentsService } from '../services/shipmentsService'
+import LocationModal from '../components/LocationModal.jsx'
+
+const OrderDetailPage = () => {
+    const { orderId } = useParams()
+    const navigate = useNavigate()
+    const [shipmentData, setShipmentData] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [showLocationModal, setShowLocationModal] = useState(false)
+
+    useEffect(() => {
+        fetchShipmentDetails()
+    }, [orderId])
+
+    const fetchShipmentDetails = async () => {
+        setLoading(true)
+        try {
+            // Extract shipment ID from order ID (remove C360-PK- prefix if present)
+            const shipmentId = orderId.replace('C360-PK-', '')
+
+            const result = await shipmentsService.getShipmentById(shipmentId)
+
+            if (result.success) {
+                setShipmentData(result.data.shipment || result.data)
+            } else {
+                toast.error(result.message || 'Failed to fetch shipment details')
+            }
+        } catch (error) {
+            toast.error('An error occurred while fetching shipment details')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleAcceptDiscountRequest = async (discountRequestId, action) => {
+        const result = await shipmentsService.decideDiscountRequest(discountRequestId, action)
+        if (result.success) {
+            toast.success(result.message || 'Decision recorded')
+            fetchShipmentDetails() // Refresh the data
+        } else {
+            toast.error(result.error || result.message || 'Failed to decide discount request')
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <div className="text-gray-500">Loading shipment details...</div>
+            </div>
+        )
+    }
+
+    if (!shipmentData) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <div className="text-red-500">Shipment not found</div>
+            </div>
+        )
+    }
+
+    // Check if shipment is trackable (in_transit or picked_up)
+    const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
+
+    return (
+        <div className="min-h-screen px-[94px] py-[30px]">
+            <div className="bg-white rounded-lg shadow-lg p-[40px]">
+                <div className="flex items-center justify-between mb-[25px]">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="text-gray-500 hover:text-gray-800 text-sm flex items-center gap-1"
+                    >
+                        ← Back
+                    </button>
+                    <h2 className="modal-heading text-center flex-1">Shipment Details</h2>
+                    {isTrackable && (
+                        <button
+                            onClick={() => setShowLocationModal(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                        >
+                            View Location
+                        </button>
+                    )}
+                    <div className="w-12"></div> {/* Spacer to balance the layout */}
+                </div>
+
+                <div className="space-y-6">
+                    {/* Basic Information */}
+                    <div className="input-border px-[20px] py-[15px]">
+                        <div className="grid grid-cols-3 gap-4 text-sm">
+                            <div className="flex flex-col gap-[10px]">
+                                <span className="text-blueBrand-lighter form-label">
+                                    Shipment ID
+                                </span>
+                                <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                    C360-PK-{shipmentData.id}
+                                </span>
+                            </div>
+                            <div className="flex flex-col gap-[10px]">
+                                <span className="text-blueBrand-lighter form-label">
+                                    Customer
+                                </span>
+                                <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                    {shipmentData.Customer?.name || 'Unknown Customer'}
+                                </span>
+                            </div>
+                            <div className="flex flex-col gap-[10px]">
+                                <span className="text-blueBrand-lighter form-label">Status</span>
+                                <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                    <span className={`px-2 py-1 rounded text-xs font-semibold ${shipmentData.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                        shipmentData.status === 'accepted' ? 'bg-blue-100 text-blue-800' :
+                                            shipmentData.status === 'in_transit' ? 'bg-yellow-100 text-yellow-800' :
+                                                shipmentData.status === 'picked_up' ? 'bg-orange-100 text-orange-800' :
+                                                    shipmentData.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                                        'bg-gray-100 text-gray-800'
+                                        }`}>
+                                        {shipmentData.status?.replace('_', ' ').toUpperCase() || 'PENDING'}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Location Details */}
+                    <div>
+                        <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+                            Location Details
+                        </h3>
+                        <div className="input-border px-[20px] py-[15px]">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Pickup Location
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.pickupLocation || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Drop Location
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.dropLocation || 'Not specified'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Customer Details */}
+                    <div>
+                        <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+                            Customer Details
+                        </h3>
+                        <div className="input-border px-[20px] py-[15px]">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Customer Name
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.Customer?.name || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Customer Phone
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.Customer?.phone || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Company Name
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.Customer?.company || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Customer Email
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.Customer?.email || 'Not specified'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Cargo Information */}
+                    <div>
+                        <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+                            Cargo Information
+                        </h3>
+                        <div className="input-border px-[20px] py-[15px]">
+                            <div className="grid grid-cols-2 gap-6 mb-4">
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Cargo Type
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.cargoType || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Vehicle Type
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.vehicleType || 'Not specified'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-6 mb-4">
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Cargo Weight
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.cargoWeight ? `${shipmentData.cargoWeight} kg` : 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Cargo Size
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.cargoSize || 'Not specified'}
+                                    </span>
+                                </div>
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Budget (PKR)
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 'Not specified'}
+                                    </span>
+                                </div>
+                            </div>
+                            {shipmentData.DiscountRequest && (
+                                <div className="flex flex-col gap-[10px]" style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '50%' }}>
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Discount Request
+                                    </span>
+                                    <div className="flex flex-col gap-[10px]">
+                                        <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                            Amount: {shipmentData.DiscountRequest.requestAmount}
+                                        </span>
+                                        <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                            Status: {shipmentData.DiscountRequest.status}
+                                        </span>
+                                        {shipmentData.DiscountRequest.status === 'pending' && (
+                                            <div className="flex gap-[10px]">
+                                                <button
+                                                    className="btn btn-primary"
+                                                    style={{ backgroundColor: '#FFB8B8', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                                                    onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'accept')}>
+                                                    Accept
+                                                </button>
+                                                <button
+                                                    className="btn btn-error"
+                                                    style={{ backgroundColor: 'teal', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                                                    onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'reject')}>
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                            {shipmentData.description && (
+                                <div className="flex flex-col gap-[10px]">
+                                    <span className="text-blueBrand-lighter form-label">
+                                        Description
+                                    </span>
+                                    <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                        {shipmentData.description}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Assignment Information */}
+                    {(shipmentData.Trucker || shipmentData.Driver) && (
+                        <div>
+                            <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+                                Assignment Details
+                            </h3>
+                            <div className="input-border px-[20px] py-[15px]">
+                                <div className="grid grid-cols-2 gap-6">
+                                    {shipmentData.Trucker && (
+                                        <div className="flex flex-col gap-[10px]">
+                                            <span className="text-blueBrand-lighter form-label">
+                                                Assigned Broker
+                                            </span>
+                                            <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                                {shipmentData.Trucker.name}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                ID: {shipmentData.Trucker.id} | {shipmentData.Trucker.email}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {shipmentData.Driver && (
+                                        <div className="flex flex-col gap-[10px]">
+                                            <span className="text-blueBrand-lighter form-label">
+                                                Assigned Driver
+                                            </span>
+                                            <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                                {shipmentData.Driver.name}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                ID: {shipmentData.Driver.id} | {shipmentData.Driver.email}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Timestamps */}
+                    {(shipmentData.createdAt || shipmentData.updatedAt) && (
+                        <div>
+                            <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
+                                Timeline
+                            </h3>
+                            <div className="input-border px-[20px] py-[15px]">
+                                <div className="grid grid-cols-2 gap-6">
+                                    {shipmentData.createdAt && (
+                                        <div className="flex flex-col gap-[10px]">
+                                            <span className="text-blueBrand-lighter form-label">
+                                                Created At
+                                            </span>
+                                            <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                                {new Date(shipmentData.createdAt).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {shipmentData.updatedAt && (
+                                        <div className="flex flex-col gap-[10px]">
+                                            <span className="text-blueBrand-lighter form-label">
+                                                Last Updated
+                                            </span>
+                                            <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                                {new Date(shipmentData.updatedAt).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Location Modal */}
+            {showLocationModal && (
+                <LocationModal
+                    shipment={{
+                        orderId: `C360-PK-${shipmentData.id}`,
+                        shipmentId: shipmentData.id,
+                        customer: shipmentData.Customer?.name || 'Unknown Customer',
+                        status: shipmentData.status,
+                        shipmentData: shipmentData
+                    }}
+                    onClose={() => setShowLocationModal(false)}
+                />
+            )}
+        </div>
+    )
+}
+
+export default OrderDetailPage
+

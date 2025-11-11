@@ -32,8 +32,8 @@ const UsersPage = () => {
   }, []);
 
 
-  const handleRowClick = (userName) => {
-    navigate(`/orders/${userName}`)
+  const handleRowClick = (userName, userRole) => {
+    navigate(`/orders/${userName}/${userRole}`)
   }
 
   const fetchUsers = async () => {
@@ -327,7 +327,7 @@ const UsersPage = () => {
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark relative">
                   <button
-                    onClick={() => user.name && handleRowClick(user.name)}
+                    onClick={() => user.name && handleRowClick(user.name, user.role)}
                     className="block text-left px-2 py-2 rounded-[6px] bg-[#50C878] text-blueBrand-dark font-medium hover:bg-[#5F8575]"
                   >
                     See orders

@@ -11,7 +11,7 @@ import EditShipmentModal from '../components/EditShipmentModal.jsx'
 import payoutsIcon from '../assets/images/payouts-icon.svg'
 
 const SalesApprovalsPage = () => {
-  const { username } = useParams()
+  const { username, role } = useParams()
   const navigate = useNavigate()
   const { shipments, loading, error, dispatch, actions } = useApp()
   const { user } = useAuth()
@@ -74,10 +74,25 @@ const SalesApprovalsPage = () => {
     console.log(req.shipmentData?.Trucker?.name.toLowerCase())
     const matchesStatus = statusFilter === 'all' || req.status === statusFilter
 
-    const matchesUser = username
-      ? req.userName.toLowerCase() === username.toLowerCase() ||
-      req.shipmentData?.Trucker?.name.toLowerCase() === username.toLowerCase()
-      : true
+    let matchesUser = true
+    if (username && role) {
+      // Filter based on role
+      if (role === 'customer') {
+        // Show orders where this user is the customer
+        matchesUser = req.userName.toLowerCase() === username.toLowerCase()
+      } else if (role === 'trucker') {
+        // Show orders where this user is the assigned trucker/broker
+        matchesUser = req.shipmentData?.Trucker?.name.toLowerCase() === username.toLowerCase()
+      } else if (role === 'driver') {
+        // Show orders where this user is the assigned driver
+        matchesUser = req.shipmentData?.Driver?.name.toLowerCase() === username.toLowerCase()
+      } else {
+        // For other roles, show both customer and trucker matches
+        matchesUser = req.userName.toLowerCase() === username.toLowerCase() ||
+          req.shipmentData?.Trucker?.name.toLowerCase() === username.toLowerCase() ||
+          req.shipmentData?.Driver?.name.toLowerCase() === username.toLowerCase()
+      }
+    }
 
     let matchesDate = true
     if (dateFilter === 'Last 15 Days' || dateFilter === 'Last 30 Days') {
@@ -160,8 +175,8 @@ const SalesApprovalsPage = () => {
     fetchShipments() // Refresh the list to get latest data
   }
 
-  const handleRowClick = (userName) => {
-    navigate(`/orders/${userName}`)
+  const handleRowClick = (userName, userRole) => {
+    navigate(`/orders/${userName}/${userRole}`)
   }
 
   const handleAssignment = (orderId) => {
@@ -214,7 +229,7 @@ const SalesApprovalsPage = () => {
               <img src={payoutsIcon} alt="icon" />
             </span>
             <span className="modal-heading">
-              {username ? `Orders (${username})` : 'Orders'}
+              {username ? `Orders (${username}${role ? ` - ${role === 'trucker' ? 'Broker' : role.charAt(0).toUpperCase() + role.slice(1)}` : ''})` : 'Orders'}
             </span>
           </h2>
 
@@ -296,7 +311,7 @@ const SalesApprovalsPage = () => {
                       ? 'bg-[#FDECEC]'
                       : 'hover:bg-gray-50'
                     }`}
-                  onClick={() => !username && handleRowClick(req.userName)}
+                  onClick={() => !username && handleRowClick(req.userName, 'customer')}
                 >
                   <td className="px-[24px] py-[16px] form-subheading">
                     {req.orderId}
@@ -346,19 +361,31 @@ const SalesApprovalsPage = () => {
                   </td>
                   {(
                     <td className="px-[24px] py-[16px]">
-                      <button
-                        className="text-purple-600 underline text-sm"
-                        onClick={() => {
-                          console.log(req);
-                          setSelectedOrder({
-                            orderId: req.orderId,
-                            customer: req.userName,
-                            shipmentData: req.shipmentData,
-                          })
-                        }}
-                      >
-                        View Details
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          className="text-purple-600 underline text-sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            console.log(req);
+                            setSelectedOrder({
+                              orderId: req.orderId,
+                              customer: req.userName,
+                              shipmentData: req.shipmentData,
+                            })
+                          }}
+                        >
+                          Quick View
+                        </button>
+                        <button
+                          className="text-blue-600 underline text-sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            navigate(`/order/${req.orderId}`)
+                          }}
+                        >
+                          Full Details
+                        </button>
+                      </div>
                     </td>
                   )}
                   <td className="px-[24px] py-[16px]">

@@ -19,6 +19,7 @@ import Signup from './pages/Signup.jsx'
 import UsersPage from './pages/UsersPage.jsx'
 import VerifyCode from './pages/VerifyCode.jsx'
 import DriverLocationPage from './pages/DriverLocationPage.jsx'
+import OrderDetailPage from './pages/OrderDetailPage.jsx'
 
 function App() {
   return (
@@ -41,7 +42,8 @@ function App() {
               {/* <Route path="/vehicles" element={<Products />} /> */}
               {/* <Route path="/profile" element={<ProfilePage />} /> */}
               <Route path="/orders" element={<SalesApprovalsPage />} />
-              <Route path="/orders/:username" element={<SalesApprovalsPage />} />
+              <Route path="/orders/:username/:role" element={<SalesApprovalsPage />} />
+              <Route path="/order/:orderId" element={<OrderDetailPage />} />
               <Route path="/users" element={<UsersPage />} />
               {/* <Route path="/booking" element={<BookingPage />} /> */}
             </Route>
