@@ -1,6 +1,7 @@
 /* eslint-disable import/order */
 import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 import applogo from '../assets/images/cargo-360.png'
 import AddVehicleModal from './AddVehicleModal.jsx'
@@ -9,8 +10,11 @@ import userAvatar from '../assets/images/user-avatar.png'
 
 const Navbar = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [isAdmin, setIsAdmin] = useState(true)
+  
 
   const navItems = [
     { label: 'Dashboard', path: '/' },
@@ -20,6 +24,11 @@ const Navbar = () => {
   if (isAdmin) {
     navItems.push({ label: 'Users', path: '/users' })
   }
+  const handleLogout = () => {
+    logout()                // ✅clears token & user from localStorage
+    navigate('/signin')     // ✅ Redirect to login page
+  }
+
 
   return (
     <nav className="bg-white main-navbar">
@@ -45,6 +54,13 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
+          {/* ✅ LOGOUT BUTTON */}
+          <button
+            onClick={handleLogout}
+            className="ml-6 text-red-600 font-semibold hover:text-red-800"
+          >
+            Logout
+          </button>
           {/* <div
             onClick={() => setShowModal(true)}
             // bg-[#122E34]

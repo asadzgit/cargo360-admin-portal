@@ -1,0 +1,111 @@
+From a9a44c46e0e225ad53e63dfce7debfb9012603c8 Mon Sep 17 00:00:00 2001
+From: Ahmad Muzzammil <ahmadmuzzammilnadeem@gmail.com>
+Date: Mon, 10 Nov 2025 11:17:56 +0500
+Subject: [PATCH] Add auto refresh in 'orders' and 'users' page and change
+ trukers to Brokers only on UI
+
+---
+ src/components/AssignmentModal.jsx |  2 +-
+ src/pages/DriverLocationPage.jsx   |  2 +-
+ src/pages/SalesApprovalsPage.jsx   | 10 ++++++++++
+ src/pages/UsersPage.jsx            | 16 +++++++++++++---
+ 4 files changed, 25 insertions(+), 5 deletions(-)
+
+diff --git a/src/components/AssignmentModal.jsx b/src/components/AssignmentModal.jsx
+index 8a46a2e..eb3bcb7 100644
+--- a/src/components/AssignmentModal.jsx
++++ b/src/components/AssignmentModal.jsx
+@@ -110,7 +110,7 @@ const AssignmentModal = ({ shipment, onClose, onAssign }) => {
+                                     onChange={(e) => handleAssignmentTypeChange(e.target.value)}
+                                     className="w-4 h-4"
+                                 />
+-                                <span className="form-subheading">Trucker</span>
++                                <span className="form-subheading">Broker</span>
+                             </label>
+                             <label className="flex items-center gap-2">
+                                 <input
+diff --git a/src/pages/DriverLocationPage.jsx b/src/pages/DriverLocationPage.jsx
+index a496657..f0422b2 100644
+--- a/src/pages/DriverLocationPage.jsx
++++ b/src/pages/DriverLocationPage.jsx
+@@ -247,7 +247,7 @@ const DriverLocationPage = () => {
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               {shipmentData.assignedTrucker && (
+                 <div>
+-                  <h3 className="font-medium text-gray-700 mb-2">Assigned Trucker</h3>
++                  <h3 className="font-medium text-gray-700 mb-2">Assigned Broker</h3>
+                   <div className="text-sm space-y-1">
+                     <div>Name: {shipmentData.assignedTrucker.name}</div>
+                     <div>Email: {shipmentData.assignedTrucker.email}</div>
+diff --git a/src/pages/SalesApprovalsPage.jsx b/src/pages/SalesApprovalsPage.jsx
+index c926d4d..9451b78 100644
+--- a/src/pages/SalesApprovalsPage.jsx
++++ b/src/pages/SalesApprovalsPage.jsx
+@@ -30,6 +30,16 @@ const SalesApprovalsPage = () => {
+     fetchShipments()
+   }, [])
+ 
++  // Auto-refresh every 10 seconds
++useEffect(() => {
++  const interval = setInterval(() => {
++    fetchShipments();
++  }, 10000); // 10 seconds
++
++  return () => clearInterval(interval); // Cleanup on unmount
++}, []);
++
++
+   const fetchShipments = async () => {
+     dispatch({ type: actions.SET_SHIPMENTS_LOADING, payload: true })
+ 
+diff --git a/src/pages/UsersPage.jsx b/src/pages/UsersPage.jsx
+index 5e1d946..3185d14 100644
+--- a/src/pages/UsersPage.jsx
++++ b/src/pages/UsersPage.jsx
+@@ -22,6 +22,16 @@ const UsersPage = () => {
+     fetchUsers()
+   }, [])
+ 
++  // ✅ Auto-refresh every 10 seconds
++useEffect(() => {
++  const interval = setInterval(() => {
++    fetchUsers();
++  }, 10000);
++
++  return () => clearInterval(interval); // cleanup
++}, []);
++
++
+   const handleRowClick = (userName) => {
+     navigate(`/orders/${userName}`)
+   }
+@@ -179,7 +189,7 @@ const UsersPage = () => {
+       selectedAccount === '' ||
+       (selectedAccount === 'Admins' && user.role === 'admin') ||
+       (selectedAccount === 'Customers' && user.role === 'customer') ||
+-      (selectedAccount === 'Truckers' && user.role === 'trucker') ||
++      (selectedAccount === 'Brokers' && user.role === 'trucker') ||
+       (selectedAccount === 'Drivers' && user.role === 'driver')
+     return matchesSearch && matchesAccount
+   })
+@@ -227,7 +237,7 @@ const UsersPage = () => {
+               <option value="All Users">All Users</option>
+               <option value="Admins">Admins</option>
+               <option value="Customers">Customers</option>
+-              <option value="Truckers">Truckers</option>
++              <option value="Truckers">Brokers</option>
+               <option value="Drivers">Drivers</option>
+             </select>
+             {/* <button
+@@ -297,7 +307,7 @@ const UsersPage = () => {
+                         user.role === 'driver' ? 'bg-yellow-100 text-yellow-800' :
+                           'bg-gray-100 text-gray-800'
+                     }`}>
+-                    {user.role?.toUpperCase()}
++                    {user.role === "trucker" ? "BROKER" : user.role?.toUpperCase()}
+                   </span>
+                 </td>
+                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
+-- 
+2.51.0.windows.1
+

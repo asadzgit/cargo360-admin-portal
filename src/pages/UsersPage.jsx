@@ -22,6 +22,16 @@ const UsersPage = () => {
     fetchUsers()
   }, [])
 
+  // ✅ Auto-refresh every 10 seconds
+useEffect(() => {
+  const interval = setInterval(() => {
+    fetchUsers();
+  }, 60000);
+
+  return () => clearInterval(interval); // cleanup
+}, []);
+
+
   const handleRowClick = (userName) => {
     navigate(`/orders/${userName}`)
   }
@@ -179,7 +189,7 @@ const UsersPage = () => {
       selectedAccount === '' ||
       (selectedAccount === 'Admins' && user.role === 'admin') ||
       (selectedAccount === 'Customers' && user.role === 'customer') ||
-      (selectedAccount === 'Truckers' && user.role === 'trucker') ||
+      (selectedAccount === 'Brokers' && user.role === 'trucker') ||
       (selectedAccount === 'Drivers' && user.role === 'driver')
     return matchesSearch && matchesAccount
   })
@@ -227,7 +237,7 @@ const UsersPage = () => {
               <option value="All Users">All Users</option>
               <option value="Admins">Admins</option>
               <option value="Customers">Customers</option>
-              <option value="Truckers">Truckers</option>
+              <option value="Truckers">Brokers</option>
               <option value="Drivers">Drivers</option>
             </select>
             {/* <button
@@ -297,7 +307,7 @@ const UsersPage = () => {
                         user.role === 'driver' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
                     }`}>
-                    {user.role?.toUpperCase()}
+                    {user.role === "trucker" ? "BROKER" : user.role?.toUpperCase()}
                   </span>
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
