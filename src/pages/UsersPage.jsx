@@ -22,14 +22,14 @@ const UsersPage = () => {
     fetchUsers()
   }, [])
 
-  // ✅ Auto-refresh every 10 seconds
-useEffect(() => {
-  const interval = setInterval(() => {
-    fetchUsers();
-  }, 60000);
+  // Auto-refresh every 1 minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchUsers();
+    }, 60000);
 
-  return () => clearInterval(interval); // cleanup
-}, []);
+    return () => clearInterval(interval); // cleanup
+  }, []);
 
 
   const handleRowClick = (userName) => {
@@ -255,11 +255,11 @@ useEffect(() => {
       </div>
 
       {/* Loading state */}
-      {loading.users && (
+      {/* {loading.users && (
         <div className="flex justify-center items-center py-8">
           <div className="text-gray-500">Loading users...</div>
         </div>
-      )}
+      )} */}
 
       {/* Error state */}
       {error.users && (

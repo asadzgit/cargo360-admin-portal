@@ -31,13 +31,13 @@ const SalesApprovalsPage = () => {
   }, [])
 
   // Auto-refresh every 10 seconds
-useEffect(() => {
-  const interval = setInterval(() => {
-    fetchShipments();
-  }, 60000); // 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchShipments();
+    }, 60000); // 10 seconds
 
-  return () => clearInterval(interval); // Cleanup on unmount
-}, []);
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
 
   const fetchShipments = async () => {
@@ -257,11 +257,11 @@ useEffect(() => {
         </div>
 
         {/* Loading state */}
-        {loading.shipments && (
+        {/* {loading.shipments && (
           <div className="flex justify-center items-center py-8">
             <div className="text-gray-500">Loading shipments...</div>
           </div>
-        )}
+        )} */}
 
         {/* Error state */}
         {error.shipments && (
