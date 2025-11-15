@@ -149,6 +149,30 @@ export const shipmentsService = {
     }
   },
 
+  // Get shipment audit logs (Admin only)
+  getShipmentLogs: async (shipmentId, limit = 100) => {
+    try {
+      const safeLimit = Math.max(1, Math.min(limit || 100, 500))
+      const response = await apiRequest(`/shipments/${shipmentId}/logs?limit=${safeLimit}`, {
+        method: 'GET',
+      })
+
+      return {
+        success: response.success ?? true,
+        data: response.data?.logs || [],
+        metadata: response.data || {},
+        message: response.message || 'Shipment logs fetched successfully',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to fetch shipment logs',
+        data: [],
+      }
+    }
+  },
+
   // Get shipment details by ID (for tracking page)
   getShipmentById: async (shipmentId) => {
     try {

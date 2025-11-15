@@ -8,6 +8,7 @@ import { shipmentsService } from '../services/shipmentsService'
 import OrderModal from '../components/OrderModal.jsx'
 import AssignmentModal from '../components/AssignmentModal.jsx'
 import EditShipmentModal from '../components/EditShipmentModal.jsx'
+import ShipmentLogsDrawer from '../components/ShipmentLogsDrawer.jsx'
 import payoutsIcon from '../assets/images/payouts-icon.svg'
 
 const SalesApprovalsPage = () => {
@@ -21,6 +22,7 @@ const SalesApprovalsPage = () => {
   const [assignmentOrder, setAssignmentOrder] = useState(null)
   const [editOrder, setEditOrder] = useState(null)
   const [dateFilter, setDateFilter] = useState('Recent Requests')
+  const [logsDrawer, setLogsDrawer] = useState({ open: false, shipmentId: null })
 
   // Check if current user is admin
   const isAdmin = user?.email == 'muhammad.asad@cargo360pk.com' || user?.id == 126;
@@ -212,6 +214,13 @@ const SalesApprovalsPage = () => {
     }
   }
 
+  const handleViewLogs = (shipmentId) => {
+    setLogsDrawer({
+      open: true,
+      shipmentId
+    })
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 px-[94px] py-[30px]">
@@ -377,13 +386,13 @@ const SalesApprovalsPage = () => {
                           Quick View
                         </button>
                         <button
-                          className="text-blue-600 underline text-sm"
+                          className="text-teal-600 underline text-sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            navigate(`/order/${req.orderId}`)
+                            handleViewLogs(req.shipmentData.id)
                           }}
                         >
-                          Full Details
+                          View Logs
                         </button>
                       </div>
                     </td>
@@ -497,6 +506,12 @@ const SalesApprovalsPage = () => {
           onUpdate={handleUpdateShipment}
         />
       )}
+
+      <ShipmentLogsDrawer
+        open={logsDrawer.open}
+        shipmentId={logsDrawer.shipmentId}
+        onClose={() => setLogsDrawer({ open: false, shipmentId: null })}
+      />
     </div >
   )
 }
