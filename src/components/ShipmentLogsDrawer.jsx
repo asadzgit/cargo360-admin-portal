@@ -53,7 +53,6 @@ const ShipmentLogsDrawer = ({ open, onClose, shipmentId }) => {
     }, [open, shipmentId])
 
     const getChangedByLabel = (log) => {
-        debugger;
         const matchedUser = users?.find?.((user) => user?.id === log.changedBy)
         const email = (log.changedByEmail || matchedUser?.email || '').trim()
         const isSuperAdmin = log.changedBy === 126 || email.toLowerCase() === 'muhammad.asad@cargo360pk.com'

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { authService } from '../services/authService'
+import { APP_STATE_STORAGE_KEY } from './AppContext'
 
 // Initial state
 const initialState = {
@@ -90,7 +91,7 @@ export const AuthProvider = ({ children }) => {
       try {
         if (authService.isAuthenticated()) {
           const user = authService.getCurrentUser()
-          
+
           // If we have a user in localStorage, set it immediately
           if (user) {
             dispatch({
@@ -152,6 +153,9 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     authService.logout()
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(APP_STATE_STORAGE_KEY)
+    }
     dispatch({ type: AUTH_ACTIONS.LOGOUT })
   }
 

@@ -1,7 +1,12 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
+import { shipmentsService } from '../services/shipmentsService'
+import { usersService } from '../services/usersService'
+import { useAuth } from './AuthContext'
 
-// Initial state for app-wide data
-const initialState = {
+const APP_STATE_STORAGE_KEY = 'cargo360_app_state_v1'
+
+// Base state for app-wide data
+const baseState = {
   shipments: [],
   users: [],
   loading: {
@@ -24,6 +29,30 @@ const initialState = {
   },
 }
 
+const loadPersistedState = () => {
+  if (typeof window === 'undefined') {
+    return baseState
+  }
+
+  try {
+    const stored = window.localStorage.getItem(APP_STATE_STORAGE_KEY)
+    if (!stored) {
+      return baseState
+    }
+    const parsed = JSON.parse(stored)
+    return {
+      ...baseState,
+      shipments: Array.isArray(parsed?.shipments) ? parsed.shipments : [],
+      users: Array.isArray(parsed?.users) ? parsed.users : [],
+    }
+  } catch (error) {
+    console.warn('Failed to parse persisted app state', error)
+    return baseState
+  }
+}
+
+const initialState = loadPersistedState()
+
 // Action types
 const APP_ACTIONS = {
   // Shipments actions
@@ -33,7 +62,7 @@ const APP_ACTIONS = {
   DELETE_SHIPMENT: 'DELETE_SHIPMENT',
   UPDATE_SHIPMENT: 'UPDATE_SHIPMENT',
   SET_SHIPMENTS_FILTER: 'SET_SHIPMENTS_FILTER',
-  
+
   // Users actions
   SET_USERS_LOADING: 'SET_USERS_LOADING',
   SET_USERS_SUCCESS: 'SET_USERS_SUCCESS',
@@ -42,7 +71,7 @@ const APP_ACTIONS = {
   UPDATE_USER: 'UPDATE_USER',
   ADD_USER: 'ADD_USER',
   SET_USERS_FILTER: 'SET_USERS_FILTER',
-  
+
   // Clear errors
   CLEAR_SHIPMENTS_ERROR: 'CLEAR_SHIPMENTS_ERROR',
   CLEAR_USERS_ERROR: 'CLEAR_USERS_ERROR',
@@ -161,11 +190,74 @@ const AppContext = createContext()
 // App provider component
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState)
+  const { isAuthenticated } = useAuth()
+
+  const persistState = useCallback((shipments, users) => {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(
+        APP_STATE_STORAGE_KEY,
+        JSON.stringify({
+          shipments,
+          users,
+          timestamp: Date.now(),
+        })
+      )
+    } catch (error) {
+      console.warn('Failed to persist app state', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    persistState(state.shipments, state.users)
+  }, [state.shipments, state.users, persistState])
+
+  const refreshShipments = useCallback(async () => {
+    dispatch({ type: APP_ACTIONS.SET_SHIPMENTS_LOADING, payload: true })
+    try {
+      const result = await shipmentsService.getAllShipments()
+      if (result.success) {
+        dispatch({ type: APP_ACTIONS.SET_SHIPMENTS_SUCCESS, payload: result.data })
+      } else {
+        dispatch({ type: APP_ACTIONS.SET_SHIPMENTS_ERROR, payload: result.error || result.message })
+      }
+    } catch (error) {
+      dispatch({ type: APP_ACTIONS.SET_SHIPMENTS_ERROR, payload: error.message })
+    }
+  }, [])
+
+  const refreshUsers = useCallback(async () => {
+    dispatch({ type: APP_ACTIONS.SET_USERS_LOADING, payload: true })
+    try {
+      const result = await usersService.getAllUsers()
+      if (result.success) {
+        dispatch({ type: APP_ACTIONS.SET_USERS_SUCCESS, payload: result.data })
+      } else {
+        dispatch({ type: APP_ACTIONS.SET_USERS_ERROR, payload: result.error || result.message })
+      }
+    } catch (error) {
+      dispatch({ type: APP_ACTIONS.SET_USERS_ERROR, payload: error.message })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    if (state.shipments.length === 0) {
+      refreshShipments()
+    }
+
+    if (state.users.length === 0) {
+      refreshUsers()
+    }
+  }, [isAuthenticated, state.shipments.length, state.users.length, refreshShipments, refreshUsers])
 
   const value = {
     ...state,
     dispatch,
     actions: APP_ACTIONS,
+    refreshShipments,
+    refreshUsers,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
@@ -180,4 +272,5 @@ export const useApp = () => {
   return context
 }
 
+export { APP_STATE_STORAGE_KEY }
 export default AppContext
