@@ -423,7 +423,7 @@ const SalesApprovalsPage = () => {
                           </button>
                         </>
                       )}
-                      {req.status === 'accepted' && (
+                      {req.status === 'accepted' || req.status === 'confirmed' && (
                         <>
                           <button
                             onClick={(e) => {
