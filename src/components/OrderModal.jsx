@@ -127,6 +127,14 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <span className="text-blueBrand-lighter form-label">
+                    Clearing Agent Number
+                  </span>
+                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                    {shipmentData.clearingAgentNum || order.clearingAgentNum || 'Not specified'}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-[10px]">
+                  <span className="text-blueBrand-lighter form-label">
                     Company Name
                   </span>
                   <span className="form-subheading" style={{ lineHeight: '20px' }}>

@@ -8,6 +8,7 @@ import { useApp } from '../contexts/AppContext'
 import { usersService } from '../services/usersService'
 import userAvatarOther from '../assets/images/user-avatar-other.jpg'
 import userAvatar from '../assets/images/user-avatar.png'
+import { exportToCSV } from '../utils/csvExport'
 
 const UsersPage = () => {
   const { users, loading, error, dispatch, actions } = useApp()
@@ -193,6 +194,31 @@ const UsersPage = () => {
       (selectedAccount === 'Drivers' && user.role === 'driver')
     return matchesSearch && matchesAccount
   })
+
+  const handleExportCSV = () => {
+    const headers = [
+      { label: 'Full Name', key: 'name' },
+      { label: 'Email Address', key: 'email' },
+      { label: 'Phone Number', key: 'phone' },
+      { label: 'Company', key: 'company' },
+      { label: 'Role', key: 'role' },
+      { label: 'Status', key: 'isApproved' },
+      { label: 'Joined Date', key: 'createdAt' },
+    ]
+
+    // Transform data for CSV export
+    const csvData = filteredUsers.map(user => ({
+      ...user,
+      isApproved: user.isApproved ? 'Approved' : 'Pending',
+      role: user.role === 'trucker' ? 'BROKER' : user.role?.toUpperCase(),
+      createdAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A',
+      phone: user.phone || 'N/A',
+      company: user.company || 'N/A',
+    }))
+
+    const filename = `users_${new Date().toISOString().split('T')[0]}.csv`
+    exportToCSV(csvData, headers, filename)
+  }
   return (
     <div className="min-h-screen px-[94px] py-[30px]">
       <div className="flex justify-between mb-[16px]">
@@ -221,6 +247,12 @@ const UsersPage = () => {
         </div>
 
         <div className="flex justify-between items-center gap-[20px]">
+          <button
+            onClick={handleExportCSV}
+            className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out"
+          >
+            Export CSV
+          </button>
           <input
             type="text"
             placeholder="Search"
