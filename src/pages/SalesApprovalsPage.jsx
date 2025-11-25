@@ -10,6 +10,7 @@ import AssignmentModal from '../components/AssignmentModal.jsx'
 import EditShipmentModal from '../components/EditShipmentModal.jsx'
 import ShipmentLogsDrawer from '../components/ShipmentLogsDrawer.jsx'
 import payoutsIcon from '../assets/images/payouts-icon.svg'
+import { exportToCSV } from '../utils/csvExport'
 
 const SalesApprovalsPage = () => {
   const { username, role } = useParams()
@@ -221,6 +222,21 @@ const SalesApprovalsPage = () => {
     })
   }
 
+  const handleExportCSV = () => {
+    const headers = [
+      { label: 'Shipment ID', key: 'orderId' },
+      { label: 'Customer Name', key: 'userName' },
+      { label: 'Cargo Type', key: 'productName' },
+      { label: 'Pickup Location', key: 'shipmentData.pickupLocation' },
+      { label: 'Drop Location', key: 'shipmentData.dropLocation' },
+      { label: 'Date & Time', key: 'dateTime' },
+      { label: 'Status', key: 'status' },
+    ]
+
+    const filename = `orders_${new Date().toISOString().split('T')[0]}.csv`
+    exportToCSV(filteredRequests, headers, filename)
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 px-[94px] py-[30px]">
@@ -243,6 +259,12 @@ const SalesApprovalsPage = () => {
           </h2>
 
           <div className="flex gap-[20px] mb-4">
+            <button
+              onClick={handleExportCSV}
+              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out"
+            >
+              Export CSV
+            </button>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
