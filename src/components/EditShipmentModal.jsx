@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { shipmentsService } from '../services/shipmentsService'
+import LocationSelect from '../components/LocationSelect.jsx'
 
 const vehicleTypes = [
   { id: 'shahzor_9ft_open', name: 'Shahzor-9Ft Open', capacity: 'Up to 1.5 tons' },
@@ -97,6 +98,22 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     }
 
     // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+  }
+
+  // New handler for LocationSelect
+  const handleLocationChange = (value, name) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+
+    // Clear error when user selects
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -240,39 +257,21 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
           <div>
             <h3 className="text-blueBrand-dark modal-heading mb-[15px]">Location Details</h3>
             <div className="input-border px-[20px] py-[15px] space-y-4">
-              <div>
-                <label className="text-blueBrand-lighter form-label block mb-2">
-                  Pickup Location
-                </label>
-                <input
-                  type="text"
-                  name="pickupLocation"
-                  value={formData.pickupLocation}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                  placeholder="Enter pickup location"
-                />
-                {errors.pickupLocation && (
-                  <p className="text-red-500 text-xs mt-1">{errors.pickupLocation}</p>
-                )}
-              </div>
+              <LocationSelect
+                value={formData.pickupLocation}
+                onChange={handleLocationChange}
+                name="pickupLocation"
+                label="Pickup Location"
+                error={errors.pickupLocation}
+              />
 
-              <div>
-                <label className="text-blueBrand-lighter form-label block mb-2">
-                  Drop Location
-                </label>
-                <input
-                  type="text"
-                  name="dropLocation"
-                  value={formData.dropLocation}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                  placeholder="Enter drop location"
-                />
-                {errors.dropLocation && (
-                  <p className="text-red-500 text-xs mt-1">{errors.dropLocation}</p>
-                )}
-              </div>
+              <LocationSelect
+                value={formData.dropLocation}
+                onChange={handleLocationChange}
+                name="dropLocation"
+                label="Drop Location"
+                error={errors.dropLocation}
+              />
             </div>
           </div>
 
@@ -370,7 +369,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
                     value={formData.cargoSize}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                    placeholder="Enter cargo size"
+                    placeholder="Enter size"
                   />
                   {errors.cargoSize && (
                     <p className="text-red-500 text-xs mt-1">{errors.cargoSize}</p>
@@ -386,9 +385,9 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  rows="3"
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                  placeholder="Enter shipment description"
+                  placeholder="Enter cargo description"
+                  rows={3}
                 />
                 {errors.description && (
                   <p className="text-red-500 text-xs mt-1">{errors.description}</p>
@@ -405,9 +404,8 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
                   value={formData.budget}
                   onChange={handleInputChange}
                   min="0"
-                  step="0.01"
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                  placeholder="Enter budget amount"
+                  placeholder="Enter budget"
                 />
                 {errors.budget && (
                   <p className="text-red-500 text-xs mt-1">{errors.budget}</p>
@@ -416,20 +414,18 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 justify-end">
+          <div className="flex justify-end gap-4 mt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50"
-              disabled={loading}
+              className="px-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
               disabled={loading}
+              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               {loading ? 'Updating...' : 'Update Shipment'}
             </button>
