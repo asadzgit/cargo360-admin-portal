@@ -57,23 +57,29 @@ export const shipmentsService = {
     }
   },
 
-  // Delete shipment (Admin only)
-  deleteShipment: async (shipmentId) => {
+  // Delete shipment (Admin only) - can include cancelReason for decline
+  deleteShipment: async (shipmentId, cancelReason = null) => {
     try {
+      const body = {};
+      if (cancelReason && typeof cancelReason === 'string' && cancelReason.trim() !== '') {
+        body.cancelReason = cancelReason.trim();
+      }
+      
       const response = await apiRequest(`/shipments/${shipmentId}`, {
         method: 'DELETE',
+        body: Object.keys(body).length > 0 ? body : undefined,
       })
 
       return {
         success: true,
         data: response,
-        message: response.message || 'Shipment deleted successfully',
+        message: response.message || 'Shipment declined successfully',
       }
     } catch (error) {
       return {
         success: false,
         error: error.message,
-        message: 'Failed to delete shipment',
+        message: 'Failed to decline shipment',
       }
     }
   },
