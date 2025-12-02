@@ -56,16 +56,108 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     vehicleType: '',
     customVehicleType: '',
     cargoWeight: '',
-    cargoSize: '',
-    budget: ''
+    numberOfVehicles: '',
+    budget: '',
+    companyName: '',
+    deliveryDate: '',
+    clearingAgentNum: ''
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [deliveryDateDisplay, setDeliveryDateDisplay] = useState('')
+  const [bookingDateISO, setBookingDateISO] = useState('')
+
+  // Convert date to DD/MM/YYYY format
+  // Handles both ISO (YYYY-MM-DD) and DD/MM/YYYY formats
+  const convertToDisplay = (dateValue) => {
+    if (!dateValue) return ''
+    
+    // If already in DD/MM/YYYY format, return as is
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateValue)) {
+      return dateValue
+    }
+    
+    // Try to parse as ISO format (YYYY-MM-DD)
+    try {
+      const date = new Date(dateValue)
+      if (!isNaN(date.getTime())) {
+        const dd = String(date.getDate()).padStart(2, '0')
+        const mm = String(date.getMonth() + 1).padStart(2, '0')
+        const yyyy = date.getFullYear()
+        return `${dd}/${mm}/${yyyy}`
+      }
+    } catch (e) {
+      console.error('Error converting date:', e)
+    }
+    
+    return ''
+  }
+  
+  // Convert DD/MM/YYYY to ISO format (YYYY-MM-DD)
+  const convertDDMMYYYYToISO = (ddmmyyyy) => {
+    if (!ddmmyyyy) return ''
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(ddmmyyyy)
+    if (match) {
+      const [, dd, mm, yyyy] = match
+      return `${yyyy}-${mm}-${dd}`
+    }
+    return ''
+  }
 
   useEffect(() => {
     if (shipment) {
       const existingVehicleType = shipment.shipmentData?.vehicleType || ''
       const isCustomVehicle = existingVehicleType && !vehicleTypes.find(v => v.id === existingVehicleType)
+
+      // Get booking date (createdAt) - this is the booking date
+      const bookingDate = shipment.shipmentData?.createdAt || shipment.createdAt
+      // Check multiple possible locations for deliveryDate
+      // Backend returns deliveryDate as DD/MM/YYYY format, so we need to handle that
+      const deliveryDate = shipment.shipmentData?.deliveryDate || shipment.deliveryDate || shipment.shipmentData?.Shipment?.deliveryDate
+      
+      // Debug logging
+      console.log('EditShipmentModal - shipment:', shipment)
+      console.log('EditShipmentModal - deliveryDate:', deliveryDate)
+      console.log('EditShipmentModal - shipment.shipmentData?.deliveryDate:', shipment.shipmentData?.deliveryDate)
+      console.log('EditShipmentModal - shipment.deliveryDate:', shipment.deliveryDate)
+
+      // Format dates
+      let formattedDeliveryDateISO = ''
+      let formattedDeliveryDateDisplay = ''
+      let formattedBookingDateISO = ''
+
+      if (bookingDate) {
+        const bDate = new Date(bookingDate)
+        if (!isNaN(bDate.getTime())) {
+          formattedBookingDateISO = bDate.toISOString().split('T')[0]
+          setBookingDateISO(formattedBookingDateISO)
+        } else {
+          const today = new Date()
+          formattedBookingDateISO = today.toISOString().split('T')[0]
+          setBookingDateISO(formattedBookingDateISO)
+        }
+      } else {
+        const today = new Date()
+        formattedBookingDateISO = today.toISOString().split('T')[0]
+        setBookingDateISO(formattedBookingDateISO)
+      }
+
+      if (deliveryDate) {
+        // Check if it's already in DD/MM/YYYY format (from backend)
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(deliveryDate)) {
+          formattedDeliveryDateDisplay = deliveryDate
+          formattedDeliveryDateISO = convertDDMMYYYYToISO(deliveryDate)
+        } else {
+          // Try to parse as ISO format
+          const dDate = new Date(deliveryDate)
+          if (!isNaN(dDate.getTime())) {
+            formattedDeliveryDateISO = dDate.toISOString().split('T')[0]
+            formattedDeliveryDateDisplay = convertToDisplay(deliveryDate)
+          }
+        }
+      }
+
+      setDeliveryDateDisplay(formattedDeliveryDateDisplay)
 
       setFormData({
         pickupLocation: shipment.shipmentData?.pickupLocation || '',
@@ -75,8 +167,11 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
         vehicleType: isCustomVehicle ? 'other' : existingVehicleType,
         customVehicleType: isCustomVehicle ? existingVehicleType : '',
         cargoWeight: shipment.shipmentData?.cargoWeight || '',
-        cargoSize: shipment.shipmentData?.cargoSize || '',
-        budget: shipment.shipmentData?.budget || ''
+        numberOfVehicles: shipment.shipmentData?.numberOfVehicles || '',
+        budget: shipment.shipmentData?.budget || '',
+        companyName: shipment.shipmentData?.Customer?.company || shipment.Customer?.company || '',
+        deliveryDate: formattedDeliveryDateISO,
+        clearingAgentNum: shipment.shipmentData?.clearingAgentNum || ''
       })
     }
   }, [shipment])
@@ -122,6 +217,120 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     }
   }
 
+  // Format user input (DD/MM/YYYY) and limit to valid day/month
+  const formatDateInput = (value) => {
+    const digits = value.replace(/[^\d/]/g, '')
+    
+    if (digits.length < value.length) {
+      return digits
+    }
+
+    const numbers = digits.replace(/\D/g, '')
+    
+    if (numbers.length === 1) {
+      return numbers
+    }
+    
+    const limited = numbers.slice(0, 8)
+    
+    let day = limited.slice(0, 2)
+    let month = limited.slice(2, 4)
+    let year = limited.slice(4, 8)
+
+    if (day.length === 2 && parseInt(day) > 31) day = '31'
+    if (day.length === 2 && parseInt(day) < 1) day = '01'
+
+    if (month.length === 2 && parseInt(month) > 12) month = '12'
+    if (month.length === 2 && parseInt(month) < 1) month = '01'
+
+    const currentYear = new Date().getFullYear()
+    const minYear = currentYear
+    const maxYear = currentYear + 2
+
+    if (year && year.length === 4) {
+      const parsedYear = parseInt(year)
+      if (parsedYear < minYear || parsedYear > maxYear) {
+        year = String(currentYear)
+      }
+    }
+
+    let formatted = day
+    
+    if (day.length === 2) {
+      formatted += '/'
+      if (month) {
+        formatted += month
+      }
+      if (month.length === 2) {
+        formatted += '/'
+        if (year) {
+          formatted += year
+        }
+      }
+    }
+
+    return formatted
+  }
+
+  const validateAndConvertDate = (formatted, key) => {
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(formatted)
+    if (match) {
+      const [, day, month, year] = match
+      const d = parseInt(day, 10)
+      const m = parseInt(month, 10)
+      const y = parseInt(year, 10)
+
+      if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+        const iso = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+        setFormData(prev => ({ ...prev, [key]: iso }))
+        return true
+      }
+    }
+    setFormData(prev => ({ ...prev, [key]: '' }))
+    return false
+  }
+
+  const convertFormattedToISO = (formatted) => {
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(formatted)
+    if (!match) return null
+    const [, day, month, year] = match
+    return `${year}-${month}-${day}`
+  }
+
+  const handleDeliveryDateChange = (e) => {
+    const formatted = formatDateInput(e.target.value)
+    setDeliveryDateDisplay(formatted)
+
+    const isValid = validateAndConvertDate(formatted, 'deliveryDate')
+
+    if (isValid) {
+      const deliveryISO = convertFormattedToISO(formatted)
+      if (deliveryISO) {
+        const bookingDateForValidation = bookingDateISO || new Date().toISOString().split('T')[0]
+        const bDate = new Date(bookingDateForValidation)
+        bDate.setHours(0, 0, 0, 0)
+        const dDate = new Date(deliveryISO)
+        dDate.setHours(0, 0, 0, 0)
+
+        if (dDate < bDate) {
+          setErrors(prev => ({
+            ...prev,
+            deliveryDate: 'Delivery date cannot be before booking date'
+          }))
+        } else {
+          setErrors(prev => ({ ...prev, deliveryDate: '' }))
+        }
+      }
+    } else if (!isValid && formatted.length > 0) {
+      setErrors(prev => ({
+        ...prev,
+        deliveryDate: 'Please enter a valid date in DD/MM/YYYY format'
+      }))
+    } else {
+      setErrors(prev => ({ ...prev, deliveryDate: '' }))
+    }
+  }
+
   const validateForm = () => {
     const newErrors = {}
 
@@ -145,8 +354,8 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
       newErrors.cargoWeight = 'Cargo weight must be a number greater than 0'
     }
 
-    if (formData.cargoSize && formData.cargoSize.length > 50) {
-      newErrors.cargoSize = 'Cargo size must be maximum 50 characters'
+    if (formData.numberOfVehicles && (isNaN(formData.numberOfVehicles) || Number(formData.numberOfVehicles) < 1)) {
+      newErrors.numberOfVehicles = 'Number of vehicles must be greater than 0'
     }
 
     if (formData.budget && (isNaN(formData.budget) || Number(formData.budget) < 0)) {
@@ -159,6 +368,33 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
     if (formData.customVehicleType && (formData.customVehicleType.length < 2 || formData.customVehicleType.length > 100)) {
       newErrors.customVehicleType = 'Custom vehicle type must be between 2-100 characters'
+    }
+
+    if (formData.companyName && (formData.companyName.length < 2 || formData.companyName.length > 200)) {
+      newErrors.companyName = 'Company name must be between 2-200 characters'
+    }
+
+    if (formData.clearingAgentNum && formData.clearingAgentNum.length > 100) {
+      newErrors.clearingAgentNum = 'Clearing agent number must be maximum 100 characters'
+    }
+
+    if (!formData.deliveryDate) {
+      newErrors.deliveryDate = 'Please enter a delivery date'
+    } else {
+      const date = new Date(formData.deliveryDate)
+      if (isNaN(date.getTime())) {
+        newErrors.deliveryDate = 'Please enter a valid date in DD/MM/YYYY format'
+      } else {
+        const bookingDateForValidation = bookingDateISO || new Date().toISOString().split('T')[0]
+        const bDate = new Date(bookingDateForValidation)
+        bDate.setHours(0, 0, 0, 0)
+        const dDate = new Date(formData.deliveryDate)
+        dDate.setHours(0, 0, 0, 0)
+        
+        if (dDate < bDate) {
+          newErrors.deliveryDate = 'Delivery date cannot be before booking date'
+        }
+      }
     }
 
     setErrors(newErrors)
@@ -180,7 +416,9 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
       Object.keys(formData).forEach(key => {
         const value = formData[key]
-        if (value !== '' && value !== null && value !== undefined) {
+        const allowEmptyString = key === 'deliveryDate' || key === 'clearingAgentNum'
+        
+        if ((value !== '' && value !== null && value !== undefined) || (allowEmptyString && value === '')) {
           // Handle vehicle type - use custom type if "other" is selected
           if (key === 'vehicleType') {
             if (value === 'other' && formData.customVehicleType) {
@@ -189,17 +427,22 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
               updateData[key] = value
             }
           }
-          // Skip customVehicleType as it's handled above
-          else if (key !== 'customVehicleType') {
+          // Skip customVehicleType and companyName as they're handled separately
+          else if (key !== 'customVehicleType' && key !== 'companyName') {
             // Convert numeric fields
-            if (key === 'cargoWeight' || key === 'budget') {
+            if (key === 'cargoWeight' || key === 'budget' || key === 'numberOfVehicles') {
               updateData[key] = Number(value)
             } else {
-              updateData[key] = value
+              updateData[key] = value === '' && allowEmptyString ? '' : value
             }
           }
         }
       })
+
+      // Handle company name separately - update customer if provided
+      if (formData.companyName !== undefined && formData.companyName !== null) {
+        updateData.companyName = formData.companyName.trim()
+      }
 
       const result = await shipmentsService.adminUpdateShipment(shipment.shipmentId, updateData)
 
@@ -249,6 +492,65 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
               <div className="flex justify-between">
                 <span className="text-blueBrand-lighter form-label">Customer:</span>
                 <span className="form-subheading">{shipment.customer}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Company & Additional Info */}
+          <div>
+            <h3 className="text-blueBrand-dark modal-heading mb-[15px]">Company & Additional Details</h3>
+            <div className="input-border px-[20px] py-[15px] space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-blueBrand-lighter form-label block mb-2">
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    placeholder="Enter company name"
+                  />
+                  {errors.companyName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-blueBrand-lighter form-label block mb-2">
+                    Delivery Date *
+                  </label>
+                  <input
+                    type="text"
+                    name="deliveryDate"
+                    value={deliveryDateDisplay}
+                    onChange={handleDeliveryDateChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    placeholder="DD/MM/YYYY"
+                  />
+                  {errors.deliveryDate && (
+                    <p className="text-red-500 text-xs mt-1">{errors.deliveryDate}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-blueBrand-lighter form-label block mb-2">
+                    Clearing Agent Number
+                  </label>
+                  <input
+                    type="text"
+                    name="clearingAgentNum"
+                    value={formData.clearingAgentNum}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    placeholder="Enter clearing agent number"
+                  />
+                  {errors.clearingAgentNum && (
+                    <p className="text-red-500 text-xs mt-1">{errors.clearingAgentNum}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -361,18 +663,19 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
                 <div>
                   <label className="text-blueBrand-lighter form-label block mb-2">
-                    Cargo Size
+                    No. of Containers/Vehicles
                   </label>
                   <input
-                    type="text"
-                    name="cargoSize"
-                    value={formData.cargoSize}
+                    type="number"
+                    name="numberOfVehicles"
+                    value={formData.numberOfVehicles}
                     onChange={handleInputChange}
+                    min="1"
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                    placeholder="Enter size"
+                    placeholder="Enter number of containers/vehicles"
                   />
-                  {errors.cargoSize && (
-                    <p className="text-red-500 text-xs mt-1">{errors.cargoSize}</p>
+                  {errors.numberOfVehicles && (
+                    <p className="text-red-500 text-xs mt-1">{errors.numberOfVehicles}</p>
                   )}
                 </div>
               </div>
