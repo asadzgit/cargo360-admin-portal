@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { FaTimes } from 'react-icons/fa'
 
 import { useApp } from '../contexts/AppContext'
 import { useAuth } from '../contexts/AuthContext'
@@ -24,6 +25,13 @@ const SalesApprovalsPage = () => {
   const [editOrder, setEditOrder] = useState(null)
   const [dateFilter, setDateFilter] = useState('Recent Requests')
   const [logsDrawer, setLogsDrawer] = useState({ open: false, shipmentId: null })
+  
+  // Decline reason modal state
+  const [showDeclineModal, setShowDeclineModal] = useState(false)
+  const [declineOrderId, setDeclineOrderId] = useState(null)
+  const [selectedReason, setSelectedReason] = useState('')
+  const [customReason, setCustomReason] = useState('')
+  const [isDeclining, setIsDeclining] = useState(false)
 
   // Check if current user is admin
   const isAdmin = user?.email == 'muhammad.asad@cargo360pk.com' || user?.id == 126;
@@ -126,20 +134,61 @@ useEffect(() => {
     }
   }
 
-  const handleDecline = async (orderId) => {
-    const shipmentId = orderId.replace('C360-PK-', '')
+  const handleDecline = (orderId) => {
+    setDeclineOrderId(orderId)
+    setShowDeclineModal(true)
+    setSelectedReason('')
+    setCustomReason('')
+  }
+
+  const handleCloseDeclineModal = () => {
+    setShowDeclineModal(false)
+    setDeclineOrderId(null)
+    setSelectedReason('')
+    setCustomReason('')
+  }
+
+  const handleSubmitDecline = async () => {
+    if (!selectedReason) {
+      toast.error('Please select a decline reason')
+      return
+    }
+
+    if (selectedReason === 'Others' && !customReason.trim()) {
+      toast.error('Please enter your decline reason')
+      return
+    }
+
+    if (!declineOrderId) return
+
+    const shipmentId = declineOrderId.replace('C360-PK-', '')
+    const declineReason = selectedReason === 'Others' ? customReason.trim() : selectedReason
 
     try {
-      const result = await shipmentsService.updateShipmentStatus(shipmentId, 'cancelled')
+      setIsDeclining(true)
+      setShowDeclineModal(false)
+
+      const result = await shipmentsService.deleteShipment(shipmentId, declineReason)
 
       if (result.success) {
-        dispatch({ type: actions.UPDATE_SHIPMENT, payload: result.data })
+        dispatch({ type: actions.DELETE_SHIPMENT, payload: parseInt(shipmentId) })
         toast.success('Shipment declined successfully')
+        fetchShipments() // Refresh the list
       } else {
         toast.error(result.message || 'Failed to decline shipment')
+        setShowDeclineModal(true) // Reopen modal on error
       }
     } catch (error) {
-      toast.error('An error occurred while declining shipment')
+      console.error('Decline error:', error)
+      toast.error(error?.message || 'An error occurred while declining shipment')
+      setShowDeclineModal(true) // Reopen modal on error
+    } finally {
+      setIsDeclining(false)
+      if (!showDeclineModal) {
+        setDeclineOrderId(null)
+        setSelectedReason('')
+        setCustomReason('')
+      }
     }
   }
 
@@ -534,6 +583,197 @@ useEffect(() => {
         shipmentId={logsDrawer.shipmentId}
         onClose={() => setLogsDrawer({ open: false, shipmentId: null })}
       />
+
+      {/* Decline Reason Modal */}
+      {showDeclineModal && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={handleCloseDeclineModal}
+        >
+          <div 
+            className="bg-white rounded-lg w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              borderRadius: '12px'
+            }}
+          >
+            {/* Modal Header */}
+            <div 
+              className="text-white px-6 py-5 rounded-t-lg flex items-center justify-between"
+              style={{
+                background: 'linear-gradient(135deg, #01304e 0%, #ed8411 100%)',
+                borderRadius: '12px 12px 0 0'
+              }}
+            >
+              <h3 className="modal-heading text-white flex items-center gap-2 m-0">
+                <FaTimes className="text-white" />
+                Decline Request
+              </h3>
+              <button 
+                onClick={handleCloseDeclineModal}
+                className="text-white hover:bg-white/20 rounded-full p-2 transition-colors flex items-center justify-center"
+                disabled={isDeclining}
+                style={{ 
+                  minWidth: '36px', 
+                  minHeight: '36px',
+                  cursor: isDeclining ? 'not-allowed' : 'pointer'
+                }}
+              >
+                <FaTimes className="text-white" size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="pt-[30px] pb-[30px] px-[40px]">
+              <div className="mb-6">
+                <h4 className="form-heading text-blueBrand-dark mb-2">
+                  Why are you declining this request?
+                </h4>
+                <p className="form-subheading text-blueBrand-lighter mb-0">
+                  Please select a reason for declining *
+                </p>
+              </div>
+
+              {/* Reason Options */}
+              <div className="space-y-3 mb-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedReason('Not satisfied with the rates')
+                    setCustomReason('')
+                  }}
+                  className={`w-full text-left px-5 py-4 rounded-lg border-2 transition-all ${
+                    selectedReason === 'Not satisfied with the rates'
+                      ? 'border-[#01304e] bg-blue-50 text-[#01304e] font-semibold shadow-sm'
+                      : 'input-border bg-white text-blueBrand-dark hover:border-gray-400 hover:shadow-sm'
+                  }`}
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    lineHeight: '22px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Not satisfied with the rates
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedReason("Don't need Booking anymore")
+                    setCustomReason('')
+                  }}
+                  className={`w-full text-left px-5 py-4 rounded-lg border-2 transition-all ${
+                    selectedReason === "Don't need Booking anymore"
+                      ? 'border-[#01304e] bg-blue-50 text-[#01304e] font-semibold shadow-sm'
+                      : 'input-border bg-white text-blueBrand-dark hover:border-gray-400 hover:shadow-sm'
+                  }`}
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    lineHeight: '22px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Don't need Booking anymore
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedReason('Others')}
+                  className={`w-full text-left px-5 py-4 rounded-lg border-2 transition-all ${
+                    selectedReason === 'Others'
+                      ? 'border-[#01304e] bg-blue-50 text-[#01304e] font-semibold shadow-sm'
+                      : 'input-border bg-white text-blueBrand-dark hover:border-gray-400 hover:shadow-sm'
+                  }`}
+                  style={{
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    lineHeight: '22px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Others
+                </button>
+              </div>
+
+              {/* Custom Reason Input */}
+              {selectedReason === 'Others' && (
+                <div className="mb-6">
+                  <label className="form-label text-blueBrand-dark mb-2 block">
+                    Please specify your reason *
+                  </label>
+                  <textarea
+                    className="w-full px-4 py-3 input-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01304e]/20 focus:border-[#01304e] resize-none"
+                    placeholder="Enter your decline reason"
+                    rows={4}
+                    value={customReason}
+                    onChange={(e) => setCustomReason(e.target.value)}
+                    style={{
+                      fontFamily: 'inherit',
+                      fontSize: '14px',
+                      lineHeight: '22px',
+                      minHeight: '100px'
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-5 border-t" style={{ borderColor: '#e6e4e7' }}>
+                <button
+                  type="button"
+                  onClick={handleCloseDeclineModal}
+                  disabled={isDeclining}
+                  className="flex-1 px-6 py-3 border-2 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    fontSize: '14px',
+                    lineHeight: '20px',
+                    borderColor: '#e6e4e7',
+                    color: '#546881',
+                    backgroundColor: 'white',
+                    cursor: isDeclining ? 'not-allowed' : 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isDeclining) {
+                      e.target.style.backgroundColor = '#f8f9fa'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'white'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmitDecline}
+                  disabled={isDeclining || !selectedReason || (selectedReason === 'Others' && !customReason.trim())}
+                  className="flex-1 px-6 py-3 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    fontSize: '14px',
+                    lineHeight: '20px',
+                    backgroundColor: '#01304e',
+                    color: 'white',
+                    border: 'none',
+                    cursor: (isDeclining || !selectedReason || (selectedReason === 'Others' && !customReason.trim())) ? 'not-allowed' : 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isDeclining && selectedReason && (selectedReason !== 'Others' || customReason.trim())) {
+                      e.target.style.backgroundColor = '#014a7a'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = '#01304e'
+                  }}
+                >
+                  {isDeclining ? 'Declining...' : 'Confirm Decline'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   )
 }
