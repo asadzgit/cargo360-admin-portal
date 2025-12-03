@@ -20,6 +20,7 @@ const Navbar = () => {
     { label: 'Dashboard', path: '/' },
     // { label: 'Vehicles', path: '/vehicles' },
     { label: 'Orders', path: '/orders' },
+    { label: 'Clearance', path: '/clearance' },
   ]
   if (isAdmin) {
     navItems.push({ label: 'Users', path: '/users' })

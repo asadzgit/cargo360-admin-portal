@@ -11,6 +11,11 @@ const OrderModal = ({ order, onClose }) => {
   if (!order) return null
 
   const shipmentData = order.shipmentData || {}
+  
+  // Debug: Log deliveryDate to see what we're getting
+  console.log('OrderModal - shipmentData:', shipmentData)
+  console.log('OrderModal - deliveryDate:', shipmentData.deliveryDate)
+  console.log('OrderModal - order:', order)
 
   // Check if shipment is trackable (in_transit or picked_up)
   const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
@@ -127,14 +132,6 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <span className="text-blueBrand-lighter form-label">
-                    Clearing Agent Number
-                  </span>
-                  <span className="form-subheading" style={{ lineHeight: '20px' }}>
-                    {shipmentData.clearingAgentNum || order.clearingAgentNum || 'Not specified'}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-[10px]">
-                  <span className="text-blueBrand-lighter form-label">
                     Company Name
                   </span>
                   <span className="form-subheading" style={{ lineHeight: '20px' }}>
@@ -180,10 +177,10 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <span className="text-blueBrand-lighter form-label">
-                    Cargo Size
+                    No. of Containers/Vehicles
                   </span>
                   <span className="form-subheading" style={{ lineHeight: '20px' }}>
-                    {shipmentData.cargoSize || 'Not specified'}
+                    {shipmentData.numberOfVehicles || 'Not specified'}
                   </span>
                 </div>
                 <div className="flex flex-col gap-[10px]">
@@ -290,6 +287,11 @@ const OrderModal = ({ order, onClose }) => {
                       <span className="text-xs text-gray-500">
                         ID: {shipmentData.Trucker.id} | {shipmentData.Trucker.email}
                       </span>
+                      {shipmentData.Trucker.phone && (
+                        <span className="text-xs text-gray-600">
+                          Phone: {shipmentData.Trucker.phone}
+                        </span>
+                      )}
                     </div>
                   )}
                   {shipmentData.Driver && (
@@ -303,6 +305,11 @@ const OrderModal = ({ order, onClose }) => {
                       <span className="text-xs text-gray-500">
                         ID: {shipmentData.Driver.id} | {shipmentData.Driver.email}
                       </span>
+                      {shipmentData.Driver.phone && (
+                        <span className="text-xs text-gray-600">
+                          Phone: {shipmentData.Driver.phone}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -311,13 +318,13 @@ const OrderModal = ({ order, onClose }) => {
           )}
 
           {/* Timestamps */}
-          {(shipmentData.createdAt || shipmentData.updatedAt) && (
+          {(shipmentData.createdAt || shipmentData.updatedAt || shipmentData.deliveryDate || order.deliveryDate) && (
             <div>
               <h3 className="text-blueBrand-dark modal-heading mb-[15px]">
                 Timeline
               </h3>
               <div className="input-border px-[20px] py-[15px]">
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {shipmentData.createdAt && (
                     <div className="flex flex-col gap-[10px]">
                       <span className="text-blueBrand-lighter form-label">
@@ -325,6 +332,16 @@ const OrderModal = ({ order, onClose }) => {
                       </span>
                       <span className="form-subheading" style={{ lineHeight: '20px' }}>
                         {new Date(shipmentData.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                  {(shipmentData.deliveryDate || order.deliveryDate) && (
+                    <div className="flex flex-col gap-[10px]">
+                      <span className="text-blueBrand-lighter form-label">
+                        Delivery Date
+                      </span>
+                      <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                        {shipmentData.deliveryDate || order.deliveryDate}
                       </span>
                     </div>
                   )}

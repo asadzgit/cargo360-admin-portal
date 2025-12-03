@@ -20,6 +20,7 @@ import UsersPage from './pages/UsersPage.jsx'
 import VerifyCode from './pages/VerifyCode.jsx'
 import DriverLocationPage from './pages/DriverLocationPage.jsx'
 import OrderDetailPage from './pages/OrderDetailPage.jsx'
+import ClearancePage from './pages/ClearancePage.jsx'
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route path="/orders/:username/:role" element={<SalesApprovalsPage />} />
               <Route path="/order/:orderId" element={<OrderDetailPage />} />
               <Route path="/users" element={<UsersPage />} />
+              <Route path="/clearance" element={<ClearancePage />} />
               {/* <Route path="/booking" element={<BookingPage />} /> */}
             </Route>
           </Routes>
