@@ -34,7 +34,9 @@ const UsersPage = () => {
 
 
   const handleRowClick = (userName, userRole) => {
-    navigate(`/orders/${userName}/${userRole}`)
+    // URL encode the username to handle spaces and special characters
+    const encodedUserName = encodeURIComponent(userName)
+    navigate(`/orders/${encodedUserName}/${userRole}`)
   }
 
   const fetchUsers = async () => {
@@ -177,9 +179,6 @@ const UsersPage = () => {
   }
 
   const filteredUsers = users.filter((user) => {
-    console.log({ user });
-
-
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
@@ -190,7 +189,7 @@ const UsersPage = () => {
       selectedAccount === '' ||
       (selectedAccount === 'Admins' && user.role === 'admin') ||
       (selectedAccount === 'Customers' && user.role === 'customer') ||
-      (selectedAccount === 'Brokers' && user.role === 'trucker') ||
+      (selectedAccount === 'Truckers' && user.role === 'trucker') ||
       (selectedAccount === 'Drivers' && user.role === 'driver')
     return matchesSearch && matchesAccount
   })
@@ -324,7 +323,7 @@ const UsersPage = () => {
                   </span>
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
-                  {user.email}
+                  {user.email || 'N/A'}
                 </td>
                 <td className="px-[24px] py-[16px] form-subheading text-blueBrand-dark">
                   {user.phone || 'N/A'}
