@@ -192,17 +192,13 @@ const UsersPage = () => {
       (selectedAccount === 'Customers' && user.role === 'customer') ||
       (selectedAccount === 'Brokers' && user.role === 'trucker') ||
       (selectedAccount === 'Drivers' && user.role === 'driver')
-<<<<<<< Updated upstream
-    return matchesSearch && matchesAccount
-=======
-    
+
     return matchesSearch && matchesAccount
   }).sort((a, b) => {
     // Sort by createdAt date - most recent first
     const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
     const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
     return dateB - dateA // Descending order (newest first)
->>>>>>> Stashed changes
   })
 
   const handleExportCSV = () => {
@@ -448,7 +444,7 @@ const UsersPage = () => {
             >
               &larr;
             </button>
-            <h2 className="text-bluBrand-dark form-heading text-center">
+            <h2 className="text-blueBrand-dark form-heading text-center">
               Add User
             </h2>
 
@@ -544,7 +540,7 @@ const UsersPage = () => {
               </div>
               <div className="relative flex-1">
                 <label className="text-blueBrand-lighter form-label">
-                  Confimr Password
+                  Confirm Password
                 </label>
                 <input
                   name="confirmPassword"
