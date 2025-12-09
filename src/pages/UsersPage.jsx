@@ -192,17 +192,13 @@ const UsersPage = () => {
       (selectedAccount === 'Customers' && user.role === 'customer') ||
       (selectedAccount === 'Truckers' && user.role === 'trucker') ||
       (selectedAccount === 'Drivers' && user.role === 'driver')
-    
-    let matchesDate = true
-    if (dateFilter === 'Last 15 Days' || dateFilter === 'Last 30 Days') {
-      const days = dateFilter === 'Last 15 Days' ? 15 : 30
-      const cutoffDate = new Date()
-      cutoffDate.setDate(cutoffDate.getDate() - days)
-      const userDate = new Date(user.createdAt)
-      matchesDate = userDate >= cutoffDate
-    }
-    
-    return matchesSearch && matchesAccount && matchesDate
+
+    return matchesSearch && matchesAccount
+  }).sort((a, b) => {
+    // Sort by createdAt date - most recent first
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+    return dateB - dateA // Descending order (newest first)
   })
 
   const handleExportCSV = () => {
@@ -279,7 +275,7 @@ const UsersPage = () => {
               <option value="All Users">All Users</option>
               <option value="Admins">Admins</option>
               <option value="Customers">Customers</option>
-              <option value="Truckers">Brokers</option>
+              <option value="Brokers">Brokers</option>
               <option value="Drivers">Drivers</option>
             </select>
             <select
@@ -457,7 +453,7 @@ const UsersPage = () => {
             >
               &larr;
             </button>
-            <h2 className="text-bluBrand-dark form-heading text-center">
+            <h2 className="text-blueBrand-dark form-heading text-center">
               Add User
             </h2>
 
@@ -553,7 +549,7 @@ const UsersPage = () => {
               </div>
               <div className="relative flex-1">
                 <label className="text-blueBrand-lighter form-label">
-                  Confimr Password
+                  Confirm Password
                 </label>
                 <input
                   name="confirmPassword"
