@@ -15,7 +15,6 @@ const UsersPage = () => {
   const [actionMenuOpen, setActionMenuOpen] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAccount, setSelectedAccount] = useState('')
-  const [dateFilter, setDateFilter] = useState('Recent Requests')
   const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate()
 
@@ -275,17 +274,8 @@ const UsersPage = () => {
               <option value="All Users">All Users</option>
               <option value="Admins">Admins</option>
               <option value="Customers">Customers</option>
-              <option value="Brokers">Brokers</option>
+              <option value="Truckers">Brokers</option>
               <option value="Drivers">Drivers</option>
-            </select>
-            <select
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none text-blueBrand-normal"
-            >
-              <option>Recent Requests</option>
-              <option>Last 15 Days</option>
-              <option>Last 30 Days</option>
             </select>
             {/* <button
               onClick={() => setShowModal(true)}
