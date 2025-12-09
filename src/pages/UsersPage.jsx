@@ -15,6 +15,7 @@ const UsersPage = () => {
   const [actionMenuOpen, setActionMenuOpen] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAccount, setSelectedAccount] = useState('')
+  const [dateFilter, setDateFilter] = useState('Recent Requests')
   const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate()
 
@@ -192,7 +193,17 @@ const UsersPage = () => {
       (selectedAccount === 'Customers' && user.role === 'customer') ||
       (selectedAccount === 'Brokers' && user.role === 'trucker') ||
       (selectedAccount === 'Drivers' && user.role === 'driver')
-    return matchesSearch && matchesAccount
+    
+    let matchesDate = true
+    if (dateFilter === 'Last 15 Days' || dateFilter === 'Last 30 Days') {
+      const days = dateFilter === 'Last 15 Days' ? 15 : 30
+      const cutoffDate = new Date()
+      cutoffDate.setDate(cutoffDate.getDate() - days)
+      const userDate = new Date(user.createdAt)
+      matchesDate = userDate >= cutoffDate
+    }
+    
+    return matchesSearch && matchesAccount && matchesDate
   })
 
   const handleExportCSV = () => {
@@ -271,6 +282,15 @@ const UsersPage = () => {
               <option value="Customers">Customers</option>
               <option value="Truckers">Brokers</option>
               <option value="Drivers">Drivers</option>
+            </select>
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="border rounded px-[14px] py-[10px] filter-button filter-button-border focus:outline-none text-blueBrand-normal"
+            >
+              <option>Recent Requests</option>
+              <option>Last 15 Days</option>
+              <option>Last 30 Days</option>
             </select>
             {/* <button
               onClick={() => setShowModal(true)}
