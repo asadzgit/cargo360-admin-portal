@@ -5,6 +5,34 @@ import { shipmentsService } from '../services/shipmentsService'
 import truckImage from '../assets/images/truck.png'
 import LocationModal from './LocationModal.jsx'
 
+// Converts numbers to words (simple PKR format)
+const numberToWords = (num) => {
+  if (num === 0) return "Zero Only";
+
+  const a = [
+    "", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
+    "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+    "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+  ];
+  const b = [
+    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+  ];
+
+  const numToWords = (n) => {
+    if (n < 20) return a[n];
+    if (n < 100) return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
+    if (n < 1000)
+      return a[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + numToWords(n % 100) : "");
+    if (n < 1000000)
+      return numToWords(Math.floor(n / 1000)) + " Thousand" + (n % 1000 ? " " + numToWords(n % 1000) : "");
+    if (n < 1000000000)
+      return numToWords(Math.floor(n / 1000000)) + " Million" + (n % 1000000 ? " " + numToWords(n % 1000000) : "");
+    return num.toString();
+  };
+
+  return numToWords(num) + " Only";
+};
+
 const OrderModal = ({ order, onClose }) => {
   const [showLocationModal, setShowLocationModal] = useState(false)
 
@@ -185,7 +213,7 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <span className="text-blueBrand-lighter form-label">
-                    Budget (PKR)
+                    Estimated budget
                   </span>
                   <span className="form-subheading" style={{ lineHeight: '20px' }}>
                     {shipmentData.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 'Not specified'}
@@ -193,8 +221,8 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
               </div>
               {shipmentData.DiscountRequest && (
-                <div className="flex flex-col gap-[10px]" style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '50%' }}>
-                  <span className="text-blueBrand-lighter form-label">
+                <div className="flex flex-col gap-[10px]" style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '50%', marginBottom: '16px' }}>
+                  <span className="text-blueBrand-lighter form-label" style={{ marginBottom: '8px' }}>
                     Discount Request
                   </span>
                   <div className="flex flex-col gap-[10px]">
@@ -204,6 +232,22 @@ const OrderModal = ({ order, onClose }) => {
                     <span className="form-subheading" style={{ lineHeight: '20px' }}>
                       Status: {shipmentData.DiscountRequest.status}
                     </span>
+                    {shipmentData.budget && (
+                      <>
+                        <span className="form-subheading" style={{ lineHeight: '20px', marginTop: '10px', fontWeight: '600' }}>
+                          Total Budget: PKR {shipmentData.totalAmount 
+                            ? (parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                            : parseFloat(shipmentData.budget).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                          }
+                        </span>
+                        <span className="form-subheading" style={{ lineHeight: '20px', fontSize: '12px', color: '#666' }}>
+                          {numberToWords(shipmentData.totalAmount 
+                            ? parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)
+                            : parseFloat(shipmentData.budget)
+                          )}
+                        </span>
+                      </>
+                    )}
                     {shipmentData.DiscountRequest.status === 'pending' && (
                       <div className="flex gap-[10px]">
                         <button
@@ -224,7 +268,7 @@ const OrderModal = ({ order, onClose }) => {
                 </div>
               )}
               {shipmentData.description && (
-                <div className="flex flex-col gap-[10px]">
+                <div className="flex flex-col gap-[10px]" style={{ marginTop: '16px' }}>
                   <span className="text-blueBrand-lighter form-label">
                     Description
                   </span>
