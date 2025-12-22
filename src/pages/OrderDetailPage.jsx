@@ -278,7 +278,7 @@ const OrderDetailPage = () => {
                                     </span>
                                     <div className="flex flex-col gap-[10px]">
                                         <span className="form-subheading" style={{ lineHeight: '20px' }}>
-                                            Amount: {shipmentData.DiscountRequest.requestAmount}
+                                            Client want a discount of: {shipmentData.DiscountRequest.requestAmount}
                                         </span>
                                         <span className="form-subheading" style={{ lineHeight: '20px' }}>
                                             Status: {shipmentData.DiscountRequest.status}
@@ -302,14 +302,18 @@ const OrderDetailPage = () => {
                                         {shipmentData.DiscountRequest.status === 'pending' && (
                                             <div className="flex gap-[10px]">
                                                 <button
-                                                    className="btn btn-primary"
-                                                    style={{ backgroundColor: '#FFB8B8', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                                                    className="btn btn-primary transition-all duration-300"
+                                                    style={{ backgroundColor: '#17B26A', color: '#fff', padding: '8px 16px', borderRadius: '5px', cursor: 'pointer' }}
+                                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#1dd876'}
+                                                    onMouseLeave={(e) => e.target.style.backgroundColor = '#17B26A'}
                                                     onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'accept')}>
                                                     Accept
                                                 </button>
                                                 <button
-                                                    className="btn btn-error"
-                                                    style={{ backgroundColor: 'teal', color: '#fff', padding: '1%', borderRadius: '5%' }}
+                                                    className="btn btn-error transition-all duration-300"
+                                                    style={{ backgroundColor: '#DC3434', color: '#fff', padding: '8px 16px', borderRadius: '5px', cursor: 'pointer' }}
+                                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#ff5252'}
+                                                    onMouseLeave={(e) => e.target.style.backgroundColor = '#DC3434'}
                                                     onClick={() => handleAcceptDiscountRequest(shipmentData.DiscountRequest.id, 'reject')}>
                                                     Reject
                                                 </button>

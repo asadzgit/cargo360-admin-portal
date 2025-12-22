@@ -59,8 +59,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
     numberOfVehicles: '',
     budget: '',
     companyName: '',
-    deliveryDate: '',
-    clearingAgentNum: ''
+    deliveryDate: ''
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -170,8 +169,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
         numberOfVehicles: shipment.shipmentData?.numberOfVehicles || '',
         budget: shipment.shipmentData?.budget || '',
         companyName: shipment.shipmentData?.Customer?.company || shipment.Customer?.company || '',
-        deliveryDate: formattedDeliveryDateISO,
-        clearingAgentNum: shipment.shipmentData?.clearingAgentNum || ''
+        deliveryDate: formattedDeliveryDateISO
       })
     }
   }, [shipment])
@@ -374,10 +372,6 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
       newErrors.companyName = 'Company name must be between 2-200 characters'
     }
 
-    if (formData.clearingAgentNum && formData.clearingAgentNum.length > 100) {
-      newErrors.clearingAgentNum = 'Clearing agent number must be maximum 100 characters'
-    }
-
     if (!formData.deliveryDate) {
       newErrors.deliveryDate = 'Please enter a delivery date'
     } else {
@@ -416,7 +410,7 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
 
       Object.keys(formData).forEach(key => {
         const value = formData[key]
-        const allowEmptyString = key === 'deliveryDate' || key === 'clearingAgentNum'
+        const allowEmptyString = key === 'deliveryDate'
         
         if ((value !== '' && value !== null && value !== undefined) || (allowEmptyString && value === '')) {
           // Handle vehicle type - use custom type if "other" is selected
@@ -532,23 +526,6 @@ const EditShipmentModal = ({ shipment, onClose, onUpdate }) => {
                   />
                   {errors.deliveryDate && (
                     <p className="text-red-500 text-xs mt-1">{errors.deliveryDate}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="text-blueBrand-lighter form-label block mb-2">
-                    Clearing Agent Number
-                  </label>
-                  <input
-                    type="text"
-                    name="clearingAgentNum"
-                    value={formData.clearingAgentNum}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                    placeholder="Enter clearing agent number"
-                  />
-                  {errors.clearingAgentNum && (
-                    <p className="text-red-500 text-xs mt-1">{errors.clearingAgentNum}</p>
                   )}
                 </div>
               </div>
