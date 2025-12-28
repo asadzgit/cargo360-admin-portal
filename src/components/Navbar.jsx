@@ -24,6 +24,7 @@ const Navbar = () => {
   ]
   if (isAdmin) {
     navItems.push({ label: 'Users', path: '/users' })
+    navItems.push({ label: 'Mobile Config', path: '/mobile-config' })
   }
   const handleLogout = () => {
     logout()                // ✅clears token & user from localStorage
