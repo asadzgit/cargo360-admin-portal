@@ -21,6 +21,7 @@ import VerifyCode from './pages/VerifyCode.jsx'
 import DriverLocationPage from './pages/DriverLocationPage.jsx'
 import OrderDetailPage from './pages/OrderDetailPage.jsx'
 import ClearancePage from './pages/ClearancePage.jsx'
+import MobileAppConfigPage from './pages/MobileAppConfigPage.jsx'
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="/order/:orderId" element={<OrderDetailPage />} />
               <Route path="/users" element={<UsersPage />} />
               <Route path="/clearance" element={<ClearancePage />} />
+              <Route path="/mobile-config" element={<MobileAppConfigPage />} />
               {/* <Route path="/booking" element={<BookingPage />} /> */}
             </Route>
           </Routes>
