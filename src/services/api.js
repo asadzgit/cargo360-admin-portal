@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 // Base API configuration for Cargo360
-const API_BASE_URL = 'https://cargo360-api.onrender.com/'
+// Set in .env.local: REACT_APP_API_BASE_URL=http://localhost:4000
+// For production, use: REACT_APP_API_BASE_URL=https://cargo360-api.onrender.com
+const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000').replace(/\/$/, '') + '/'
 
 // Create axios instance with base configuration
 const axiosInstance = axios.create({
