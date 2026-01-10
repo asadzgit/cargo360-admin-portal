@@ -6,30 +6,66 @@ import LocationModal from '../components/LocationModal.jsx'
 
 // Converts numbers to words (simple PKR format)
 const numberToWords = (num) => {
-  if (num === 0) return "Zero Only";
+    if (num === 0) return "Zero Only";
 
-  const a = [
-    "", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
-    "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
-    "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
-  ];
-  const b = [
-    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
-  ];
+    const a = [
+        "", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
+        "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+        "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+    ];
+    const b = [
+        "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+    ];
 
-  const numToWords = (n) => {
-    if (n < 20) return a[n];
-    if (n < 100) return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
-    if (n < 1000)
-      return a[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + numToWords(n % 100) : "");
-    if (n < 1000000)
-      return numToWords(Math.floor(n / 1000)) + " Thousand" + (n % 1000 ? " " + numToWords(n % 1000) : "");
-    if (n < 1000000000)
-      return numToWords(Math.floor(n / 1000000)) + " Million" + (n % 1000000 ? " " + numToWords(n % 1000000) : "");
-    return n.toString();
-  };
+    const numToWords = (n) => {
+        if (n < 20) return a[n];
+        if (n < 100) return b[Math.floor(n / 10)] + (n % 10 ? " " + a[n % 10] : "");
+        if (n < 1000)
+            return a[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + numToWords(n % 100) : "");
+        if (n < 1000000)
+            return numToWords(Math.floor(n / 1000)) + " Thousand" + (n % 1000 ? " " + numToWords(n % 1000) : "");
+        if (n < 1000000000)
+            return numToWords(Math.floor(n / 1000000)) + " Million" + (n % 1000000 ? " " + numToWords(n % 1000000) : "");
+        return n.toString();
+    };
 
-  return numToWords(num) + " Only";
+    return numToWords(num) + " Only";
+};
+
+// Helper function to get platform display value
+const getPlatformDisplay = (shipmentData) => {
+    // Check multiple possible field names from backend
+    const platformValue = shipmentData?.platform ||
+        shipmentData?.source ||
+        shipmentData?.submittedFrom ||
+        shipmentData?.bookingPlatform ||
+        shipmentData?.bookingSource ||
+        shipmentData?.submissionPlatform;
+
+    if (!platformValue || platformValue === null || platformValue === undefined) {
+        return { text: 'N/A', isMobile: false };
+    }
+
+    const platformLower = platformValue.toString().toLowerCase().trim();
+
+    // Check for mobile app variations
+    const isMobile = platformLower === 'mobile' ||
+        platformLower === 'app' ||
+        platformLower === 'cargo360-client-app' ||
+        platformLower === 'android' ||
+        platformLower === 'ios';
+
+    // Check for web portal variations
+    const isWeb = platformLower === 'web' ||
+        platformLower === 'portal' ||
+        platformLower === 'cargo360-client-portal' ||
+        platformLower === 'website';
+
+    if (isMobile) return { text: 'Mobile', isMobile: true };
+    if (isWeb) return { text: 'Web', isMobile: false };
+
+    // If value exists but doesn't match known patterns, display as-is
+    return { text: platformValue, isMobile: false };
 };
 
 const OrderDetailPage = () => {
@@ -52,7 +88,8 @@ const OrderDetailPage = () => {
             const result = await shipmentsService.getShipmentById(shipmentId)
 
             if (result.success) {
-                setShipmentData(result.data.shipment || result.data)
+                // The service already handles the response structure, so result.data is the shipment object
+                setShipmentData(result.data)
             } else {
                 toast.error(result.message || 'Failed to fetch shipment details')
             }
@@ -92,6 +129,9 @@ const OrderDetailPage = () => {
     // Check if shipment is trackable (in_transit or picked_up)
     const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
 
+    // Get platform display information
+    const platformDisplay = getPlatformDisplay(shipmentData)
+
     return (
         <div className="min-h-screen px-[94px] py-[30px]">
             <div className="bg-white rounded-lg shadow-lg p-[40px]">
@@ -117,7 +157,7 @@ const OrderDetailPage = () => {
                 <div className="space-y-6">
                     {/* Basic Information */}
                     <div className="input-border px-[20px] py-[15px]">
-                        <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div className="flex flex-col gap-[10px]">
                                 <span className="text-blueBrand-lighter form-label">
                                     Shipment ID
@@ -145,6 +185,19 @@ const OrderDetailPage = () => {
                                                         'bg-gray-100 text-gray-800'
                                         }`}>
                                         {shipmentData.status?.replace('_', ' ').toUpperCase() || 'PENDING'}
+                                    </span>
+                                </span>
+                            </div>
+                            <div className="flex flex-col gap-[10px]">
+                                <span className="text-blueBrand-lighter form-label">
+                                    Platform
+                                </span>
+                                <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                                    <span className={`px-2 py-1 rounded text-xs font-semibold ${platformDisplay.isMobile
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : 'bg-blue-100 text-blue-800'
+                                        }`}>
+                                        {platformDisplay.text}
                                     </span>
                                 </span>
                             </div>
@@ -286,13 +339,13 @@ const OrderDetailPage = () => {
                                         {shipmentData.budget && (
                                             <>
                                                 <span className="form-subheading" style={{ lineHeight: '20px', marginTop: '10px', fontWeight: '600' }}>
-                                                    Total Budget: PKR {shipmentData.totalAmount 
+                                                    Total Budget: PKR {shipmentData.totalAmount
                                                         ? (parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                                         : parseFloat(shipmentData.budget).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                                     }
                                                 </span>
                                                 <span className="form-subheading" style={{ lineHeight: '20px', fontSize: '12px', color: '#666' }}>
-                                                    {numberToWords(shipmentData.totalAmount 
+                                                    {numberToWords(shipmentData.totalAmount
                                                         ? parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)
                                                         : parseFloat(shipmentData.budget)
                                                     )}

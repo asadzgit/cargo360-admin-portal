@@ -42,9 +42,12 @@ export const shipmentsService = {
         method: 'GET',
       })
 
+      // Handle different response structures: response.data.shipment or response.data directly
+      const shipmentData = response.data?.shipment || response.data
+
       return {
         success: true,
-        data: response.data.shipment,
+        data: shipmentData,
         message: 'Shipment fetched successfully',
       }
     } catch (error) {
@@ -64,7 +67,7 @@ export const shipmentsService = {
       if (cancelReason && typeof cancelReason === 'string' && cancelReason.trim() !== '') {
         body.cancelReason = cancelReason.trim();
       }
-      
+
       const response = await apiRequest(`/shipments/${shipmentId}`, {
         method: 'DELETE',
         body: Object.keys(body).length > 0 ? body : undefined,
