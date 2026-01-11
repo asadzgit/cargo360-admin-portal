@@ -194,8 +194,8 @@ const OrderDetailPage = () => {
                                 </span>
                                 <span className="form-subheading" style={{ lineHeight: '20px' }}>
                                     <span className={`px-2 py-1 rounded text-xs font-semibold ${platformDisplay.isMobile
-                                            ? 'bg-purple-100 text-purple-800'
-                                            : 'bg-blue-100 text-blue-800'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : 'bg-blue-100 text-blue-800'
                                         }`}>
                                         {platformDisplay.text}
                                     </span>

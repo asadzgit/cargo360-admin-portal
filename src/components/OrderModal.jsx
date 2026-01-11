@@ -138,11 +138,11 @@ const OrderModal = ({ order, onClose }) => {
                 <span className="text-blueBrand-lighter form-label">Status</span>
                 <span className="form-subheading" style={{ lineHeight: '20px' }}>
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${shipmentData.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                      shipmentData.status === 'accepted' ? 'bg-blue-100 text-blue-800' :
-                        shipmentData.status === 'in_transit' ? 'bg-yellow-100 text-yellow-800' :
-                          shipmentData.status === 'picked_up' ? 'bg-orange-100 text-orange-800' :
-                            shipmentData.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
+                    shipmentData.status === 'accepted' ? 'bg-blue-100 text-blue-800' :
+                      shipmentData.status === 'in_transit' ? 'bg-yellow-100 text-yellow-800' :
+                        shipmentData.status === 'picked_up' ? 'bg-orange-100 text-orange-800' :
+                          shipmentData.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
                     }`}>
                     {shipmentData.status?.replace('_', ' ').toUpperCase() || 'PENDING'}
                   </span>
@@ -154,8 +154,8 @@ const OrderModal = ({ order, onClose }) => {
                 </span>
                 <span className="form-subheading" style={{ lineHeight: '20px' }}>
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${platformDisplay.isMobile
-                      ? 'bg-purple-100 text-purple-800'
-                      : 'bg-blue-100 text-blue-800'
+                    ? 'bg-purple-100 text-purple-800'
+                    : 'bg-blue-100 text-blue-800'
                     }`}>
                     {platformDisplay.text}
                   </span>
