@@ -33,20 +33,54 @@ const numberToWords = (num) => {
   return numToWords(num) + " Only";
 };
 
+// Helper function to get platform display value
+const getPlatformDisplay = (shipmentData) => {
+  // Check multiple possible field names from backend
+  const platformValue = shipmentData?.platform ||
+    shipmentData?.source ||
+    shipmentData?.submittedFrom ||
+    shipmentData?.bookingPlatform ||
+    shipmentData?.bookingSource ||
+    shipmentData?.submissionPlatform;
+
+  if (!platformValue || platformValue === null || platformValue === undefined) {
+    return { text: 'N/A', isMobile: false };
+  }
+
+  const platformLower = platformValue.toString().toLowerCase().trim();
+
+  // Check for mobile app variations
+  const isMobile = platformLower === 'mobile' ||
+    platformLower === 'app' ||
+    platformLower === 'cargo360-client-app' ||
+    platformLower === 'android' ||
+    platformLower === 'ios';
+
+  // Check for web portal variations
+  const isWeb = platformLower === 'web' ||
+    platformLower === 'portal' ||
+    platformLower === 'cargo360-client-portal' ||
+    platformLower === 'website';
+
+  if (isMobile) return { text: 'Mobile', isMobile: true };
+  if (isWeb) return { text: 'Web', isMobile: false };
+
+  // If value exists but doesn't match known patterns, display as-is
+  return { text: platformValue, isMobile: false };
+};
+
 const OrderModal = ({ order, onClose }) => {
   const [showLocationModal, setShowLocationModal] = useState(false)
 
   if (!order) return null
 
   const shipmentData = order.shipmentData || {}
-  
-  // Debug: Log deliveryDate to see what we're getting
-  console.log('OrderModal - shipmentData:', shipmentData)
-  console.log('OrderModal - deliveryDate:', shipmentData.deliveryDate)
-  console.log('OrderModal - order:', order)
 
   // Check if shipment is trackable (in_transit or picked_up)
   const isTrackable = shipmentData.status === 'in_transit' || shipmentData.status === 'picked_up'
+
+  // Get platform display information
+  const platformDisplay = getPlatformDisplay(shipmentData)
 
   // Accept/Reject discount request
   const handleAcceptDiscountRequest = async (discountRequestId, action) => {
@@ -83,7 +117,7 @@ const OrderModal = ({ order, onClose }) => {
         <div className="space-y-6">
           {/* Basic Information */}
           <div className="input-border px-[20px] py-[15px]">
-            <div className="grid grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div className="flex flex-col gap-[10px]">
                 <span className="text-blueBrand-lighter form-label">
                   Shipment ID
@@ -103,7 +137,28 @@ const OrderModal = ({ order, onClose }) => {
               <div className="flex flex-col gap-[10px]">
                 <span className="text-blueBrand-lighter form-label">Status</span>
                 <span className="form-subheading" style={{ lineHeight: '20px' }}>
-                  {shipmentData.status?.replace('_', ' ').toUpperCase() || 'PENDING'}
+                  <span className={`px-2 py-1 rounded text-xs font-semibold ${shipmentData.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                    shipmentData.status === 'accepted' ? 'bg-blue-100 text-blue-800' :
+                      shipmentData.status === 'in_transit' ? 'bg-yellow-100 text-yellow-800' :
+                        shipmentData.status === 'picked_up' ? 'bg-orange-100 text-orange-800' :
+                          shipmentData.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                    }`}>
+                    {shipmentData.status?.replace('_', ' ').toUpperCase() || 'PENDING'}
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <span className="text-blueBrand-lighter form-label">
+                  Platform
+                </span>
+                <span className="form-subheading" style={{ lineHeight: '20px' }}>
+                  <span className={`px-2 py-1 rounded text-xs font-semibold ${platformDisplay.isMobile
+                    ? 'bg-purple-100 text-purple-800'
+                    : 'bg-blue-100 text-blue-800'
+                    }`}>
+                    {platformDisplay.text}
+                  </span>
                 </span>
               </div>
             </div>
@@ -235,13 +290,13 @@ const OrderModal = ({ order, onClose }) => {
                     {shipmentData.budget && (
                       <>
                         <span className="form-subheading" style={{ lineHeight: '20px', marginTop: '10px', fontWeight: '600' }}>
-                          Total Budget: PKR {shipmentData.totalAmount 
+                          Total Budget: PKR {shipmentData.totalAmount
                             ? (parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                             : parseFloat(shipmentData.budget).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                           }
                         </span>
                         <span className="form-subheading" style={{ lineHeight: '20px', fontSize: '12px', color: '#666' }}>
-                          {numberToWords(shipmentData.totalAmount 
+                          {numberToWords(shipmentData.totalAmount
                             ? parseFloat(shipmentData.budget) - parseFloat(shipmentData.totalAmount)
                             : parseFloat(shipmentData.budget)
                           )}
